@@ -8,7 +8,7 @@ class Card:
         self.create_connection_pool()
     def create_connection_pool(self):
         try:
-            # 创建数据库连接池
+            # Создание пула подключений к БД
             self.pool = MySQLConnectionPool(
                 pool_name='my_pool',
                 pool_size=32,
@@ -21,7 +21,7 @@ class Card:
             print(f"create_connection_pool-Failed to create connection pool: {err}")
     def get_connection(self):
         try:
-            # 从连接池获取数据库连接
+            # Получение подключения из пула
             connection = self.pool.get_connection()
             if connection.is_connected():
                 self.connect = connection
@@ -71,12 +71,12 @@ class Card:
 db = Card()
 
 class ChatUser:
-    '''用户表操作类'''
+    '''Класс для работы с таблицей пользователей'''
 
     def __init__(self, Msg: Message = None):
         self.msg = Msg
     def get(self,from_user):
-        '''查询用户'''
+        '''Поиск пользователя'''
         user= db.select("SELECT * FROM chat_user WHERE chat_id=%s",(from_user.id,))
         if user:
             return user[0]
@@ -86,7 +86,7 @@ class ChatUser:
         full_name = f"{from_user.first_name or ''}{from_user.last_name or ''}"
         aad = "INSERT INTO chat_user (chat_id,username,full_name) " \
               "VALUES(%s,%s,%s)"
-        data = (from_user.id, from_user.username or '无', full_name)
+        data = (from_user.id, from_user.username or 'Нет', full_name)
         if db.insert(aad, data):
             return self.get(from_user=from_user)
         return []
@@ -140,7 +140,7 @@ class AdvertisingData:
                          ,(titel,url,id))
         return data
 class CarData:
-    # 管理后台 车队管理Car类数据
+    # Данные подборок (Car) для панели администратора
     def __init__(self, Msg: Message = None):
         self.msg = Msg
     async def get_fleet(self,**kwargs):
@@ -225,7 +225,7 @@ class CarData:
             return data[0]
         return []
 class GroupData:
-    # 管理后台Group 类数据
+    # Данные групп и каналов (Group) для панели администратора
     async def get_group_list(self,**kwargs):
         LIMIT,OFFSET=kwargs.get('LIMIT'),kwargs.get('OFFSET')
         search=kwargs.get('search')

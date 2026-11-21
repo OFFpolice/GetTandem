@@ -7,60 +7,60 @@ from config import *
 
 
 def command(client: Client):
-    '''开始命令或者首页命令'''
+    '''Команда запуска или главная страница'''
     client.add_handler(MessageHandler(start_handler, filters.command(["start", "index"]) & filters.private))
-    # 呼叫管理员页面命令
+    # Команда вызова панели администратора
     client.add_handler(
-        MessageHandler(admii_command, filters.private & (filters.command("admin") | filters.regex("⚙管理页面"))))
-    # 普通用户路由
+        MessageHandler(admii_command, filters.private & (filters.command("admin") | filters.regex("⚙Админ-панель"))))
+    # Маршруты обычных пользователей
     client.add_handler(CallbackQueryHandler(callback_query_router, filters.create(
         lambda _, __, query: (query.data and query.data.startswith("r/")))))
-    # 管理员路由
+    # Маршруты администратора
     client.add_handler(CallbackQueryHandler(admin_callback_query_router, filters.create(
         lambda _, __, query: (query.data and query.data.startswith("a/")))))
-    # 用户群组消息更新
+    # Обновление статуса участника в чате/канале
     client.add_handler(ChatMemberUpdatedHandler(handle_chat_member_update))
-    # # 用户删除消息监控
+    # # Мониторинг удалённых сообщений пользователя
     # client.add_handler(DeletedMessagesHandler(delete_message))
-    # # 用户修改了消息
+    # # Пользователь изменил сообщение
     # client.add_handler(EditedMessageHandler(edited_message))
-    # 回复机器人配置消息输入监视器
+    # Обработчик ввода ответа на настройку бота
     client.add_handler(MessageHandler(admin_config_reply_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("📲")
         )
     )))
-    # 广告管理输入监视器
+    # Обработчик ввода управления рекламой
     client.add_handler(MessageHandler(admin_advertising_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("🗞️")
         )
     )))
-    # 车队管理输入监视器
+    # Обработчик ввода управления подборками
     client.add_handler(MessageHandler(admin_car_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("🚒")
         )
     )))
-    # 车队管理群组输入监视器
+    # Обработчик ввода управления подборками в админ-группе
     client.add_handler(MessageHandler(admin_car_group_input, filters.group & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("💭")
         )
     )))
-    # 群频道管理输入监视器
+    # Обработчик ввода управления группами и каналами
     client.add_handler(MessageHandler(admin_group_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("🏵️")
         )
     )))
-    # 机器人黑名单输入监视器
+    # Обработчик ввода чёрного списка ботов
     client.add_handler(MessageHandler(admin_bot_blacklist_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("🤖")
         )
     )))
-    # 用户管理输入
+    # Обработчик ввода управления пользователями
     client.add_handler(MessageHandler(admin_user_input, filters.private & filters.reply & filters.create(
         lambda _, __, query: (
                 query.reply_to_message.text and query.reply_to_message.text.startswith("👨‍💻")
@@ -73,15 +73,15 @@ if __name__ == '__main__':
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind(("127.0.0.1", 47209))
     except socket.error:
-        print('已经启动过')
+        print('Бот уже запущен')
     else:
         try:
-            logging.critical('启动成功')
+            logging.critical('Успешный запуск')
             bot_config = get_config()
-            logging.critical(f"读取配置文件:{bot_config}")
+            logging.critical(f"Загружен файл конфигурации: {bot_config}")
             scheduler.start()
             schedulerObj = scheduler.add_job(convoyDriving, "interval", seconds=60 * 30, misfire_grace_time=60)
-            logging.critical(f"定时器执行时间:{schedulerObj}")
+            logging.critical(f"Время выполнения планировщика: {schedulerObj}")
             command(app)
             app.run()
         except Exception as e:

@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地WP数据库
+ Source Server         : Локальная БД WP
  Source Server Type    : MySQL
  Source Server Version : 80029
  Source Host           : localhost:3306
@@ -23,9 +23,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `advertising`;
 CREATE TABLE `advertising` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `titel` varchar(255) DEFAULT NULL COMMENT '广告标题',
-  `url` varchar(255) DEFAULT NULL COMMENT '广告链接',
-  `creation_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '广告创建时间',
+  `titel` varchar(255) DEFAULT NULL COMMENT 'Заголовок рекламы',
+  `url` varchar(255) DEFAULT NULL COMMENT 'Ссылка на рекламу',
+  `creation_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Время создания рекламы',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -33,9 +33,9 @@ CREATE TABLE `advertising` (
 -- Records of advertising
 -- ----------------------------
 BEGIN;
-INSERT INTO `advertising` VALUES (6, '互推2', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
-INSERT INTO `advertising` VALUES (7, '互推', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
-INSERT INTO `advertising` VALUES (9, '互推3', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
+INSERT INTO `advertising` VALUES (6, 'Взаимопиар 2', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
+INSERT INTO `advertising` VALUES (7, 'Взаимопиар', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
+INSERT INTO `advertising` VALUES (9, 'Взаимопиар 3', 'https://t.me/+oYUJoUkMlfphN2M1', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -44,7 +44,7 @@ COMMIT;
 DROP TABLE IF EXISTS `bot_blacklist`;
 CREATE TABLE `bot_blacklist` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `bot_name` varchar(255) DEFAULT NULL COMMENT '机器人用户名',
+  `bot_name` varchar(255) DEFAULT NULL COMMENT 'Юзернейм бота',
   `state` int DEFAULT '0',
   `creation_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -69,11 +69,11 @@ COMMIT;
 DROP TABLE IF EXISTS `chat_user`;
 CREATE TABLE `chat_user` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `chat_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户ID',
-  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '账号',
-  `full_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称全名',
-  `state` int DEFAULT '0' COMMENT '账号状态',
-  `admin` int DEFAULT '0' COMMENT '管理员权限 0普通用户1管理员',
+  `chat_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'ID пользователя',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Юзернейм',
+  `full_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Полное имя',
+  `state` int DEFAULT '0' COMMENT 'Статус аккаунта',
+  `admin` int DEFAULT '0' COMMENT 'Права: 0 обычный пользователь, 1 администратор',
   `creation_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=626 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -107,19 +107,19 @@ CREATE TABLE `config` (
 -- Records of config
 -- ----------------------------
 BEGIN;
-INSERT INTO `config` VALUES (1, 'botName', '互推机器人1');
+INSERT INTO `config` VALUES (1, 'botName', 'Бот взаимопиара 1');
 INSERT INTO `config` VALUES (2, 'botUserName', '@FlashCloudBot');
-INSERT INTO `config` VALUES (8, 'indexTxt', '欢迎使用互推机器人');
+INSERT INTO `config` VALUES (8, 'indexTxt', 'Добро пожаловать в бот взаимопиара');
 INSERT INTO `config` VALUES (11, 'adminGroup', '-1001977340890');
 INSERT INTO `config` VALUES (12, 'publicGroup', '@sepigzs');
 INSERT INTO `config` VALUES (16, 'msgGroup', '-');
 INSERT INTO `config` VALUES (17, 'video', '');
 INSERT INTO `config` VALUES (19, 'restrict_limit', '30');
 INSERT INTO `config` VALUES (20, 'notifyType', '0');
-INSERT INTO `config` VALUES (22, 'rejectText', '该小组成员已满，申请其他小组不');
-INSERT INTO `config` VALUES (23, 'rejectText', '安德森');
-INSERT INTO `config` VALUES (24, 'rejectText', '质量太差');
-INSERT INTO `config` VALUES (25, 'rejectText', '阅读不足');
+INSERT INTO `config` VALUES (22, 'rejectText', 'В этой подборке уже нет мест, выберите другую');
+INSERT INTO `config` VALUES (23, 'rejectText', 'Не соответствует тематике');
+INSERT INTO `config` VALUES (24, 'rejectText', 'Низкое качество контента');
+INSERT INTO `config` VALUES (25, 'rejectText', 'Недостаточно просмотров');
 COMMIT;
 
 -- ----------------------------
@@ -128,16 +128,16 @@ COMMIT;
 DROP TABLE IF EXISTS `fleet_list`;
 CREATE TABLE `fleet_list` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '车队标题',
-  `introduce` varchar(255) DEFAULT NULL COMMENT '车队介绍',
-  `fleet_type` int DEFAULT '0' COMMENT '车队类型：0频道，1群组，2自定义',
-  `state` int DEFAULT '0' COMMENT '状态:0未开车，1已开车',
-  `sign` varchar(255) DEFAULT NULL COMMENT '排序标记:abcd',
-  `total` int DEFAULT '20' COMMENT '最大互推成员数',
-  `count` int DEFAULT '1' COMMENT '开车周期',
-  `mi_member` int DEFAULT '1' COMMENT '最少订阅人数',
-  `mi_read` int DEFAULT '1' COMMENT '最低平均阅读',
-  `creation_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Название подборки',
+  `introduce` varchar(255) DEFAULT NULL COMMENT 'Описание подборки',
+  `fleet_type` int DEFAULT '0' COMMENT 'Тип подборки: 0 канал, 1 группа, 2 пользовательская',
+  `state` int DEFAULT '0' COMMENT 'Статус: 0 остановлена, 1 активна',
+  `sign` varchar(255) DEFAULT NULL COMMENT 'Метка сортировки: abcd',
+  `total` int DEFAULT '20' COMMENT 'Макс. количество участников',
+  `count` int DEFAULT '1' COMMENT 'Интервал рассылки',
+  `mi_member` int DEFAULT '1' COMMENT 'Мин. количество подписчиков',
+  `mi_read` int DEFAULT '1' COMMENT 'Мин. среднее число просмотров',
+  `creation_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Время создания',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -145,7 +145,7 @@ CREATE TABLE `fleet_list` (
 -- Records of fleet_list
 -- ----------------------------
 BEGIN;
-INSERT INTO `fleet_list` VALUES (8, 'A组1', NULL, 0, 1, NULL, 20, 1, 1, 1, '2023-10-25 11:23:03');
+INSERT INTO `fleet_list` VALUES (8, 'Группа A1', NULL, 0, 1, NULL, 20, 1, 1, 1, '2023-10-25 11:23:03');
 COMMIT;
 
 -- ----------------------------
@@ -154,18 +154,18 @@ COMMIT;
 DROP TABLE IF EXISTS `group_list`;
 CREATE TABLE `group_list` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `group_id` varchar(255) DEFAULT NULL COMMENT '群组id',
-  `username` varchar(255) DEFAULT NULL COMMENT '群组账号',
-  `title` varchar(255) DEFAULT NULL COMMENT '群组标题',
-  `type` varchar(64) DEFAULT NULL COMMENT '类型/频道/群组',
-  `total_people` int DEFAULT NULL COMMENT '群频总人数',
-  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '主url',
-  `msg_id` int DEFAULT '0' COMMENT '互推消息id',
-  `out_fan` int DEFAULT '0' COMMENT '输出粉丝',
-  `input_fan` int DEFAULT '0' COMMENT '输入粉丝',
-  `state` int DEFAULT '0' COMMENT '状态:0未加入,1审核中,2已审核,99禁用',
-  `fleet_list` int DEFAULT '0' COMMENT '当前车队',
-  `chat_id` int DEFAULT NULL COMMENT '所属用户',
+  `group_id` varchar(255) DEFAULT NULL COMMENT 'ID группы/канала',
+  `username` varchar(255) DEFAULT NULL COMMENT 'Юзернейм группы/канала',
+  `title` varchar(255) DEFAULT NULL COMMENT 'Название группы/канала',
+  `type` varchar(64) DEFAULT NULL COMMENT 'Тип: канал / группа',
+  `total_people` int DEFAULT NULL COMMENT 'Всего подписчиков/участников',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'Основная ссылка',
+  `msg_id` int DEFAULT '0' COMMENT 'ID сообщения ВП',
+  `out_fan` int DEFAULT '0' COMMENT 'Исходящий трафик',
+  `input_fan` int DEFAULT '0' COMMENT 'Входящий трафик',
+  `state` int DEFAULT '0' COMMENT 'Статус: 0 свободен, 1 на проверке, 2 одобрен, 10 заблокирован',
+  `fleet_list` int DEFAULT '0' COMMENT 'Текущая подборка',
+  `chat_id` int DEFAULT NULL COMMENT 'Владелец',
   `creation_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -174,9 +174,9 @@ CREATE TABLE `group_list` (
 -- Records of group_list
 -- ----------------------------
 BEGIN;
-INSERT INTO `group_list` VALUES (212, '-1001926767085', 'anniutes', '频道测试', 'CHANNEL', 85, 'https://t.me/+K4HlbH17FFhhOGNl', 0, 0, 0, 1, 8, 612, '2023-10-25 11:24:08');
-INSERT INTO `group_list` VALUES (213, '-1001977340890', '', '测试群组', 'SUPERGROUP', 4, 'https://t.me/+zK1UylU7DvtlNDc1', 0, 0, 0, 0, 0, 612, '2023-10-25 11:24:44');
-INSERT INTO `group_list` VALUES (214, '-1001909433562', '', '测试频道2', 'CHANNEL', 20, 'https://t.me/+aYU-bOyGsDlmMGM1', 0, 0, 0, 0, 8, 612, '2023-10-28 17:53:45');
+INSERT INTO `group_list` VALUES (212, '-1001926767085', 'anniutes', 'Тестовый канал', 'CHANNEL', 85, 'https://t.me/+K4HlbH17FFhhOGNl', 0, 0, 0, 1, 8, 612, '2023-10-25 11:24:08');
+INSERT INTO `group_list` VALUES (213, '-1001977340890', '', 'Тестовая группа', 'SUPERGROUP', 4, 'https://t.me/+zK1UylU7DvtlNDc1', 0, 0, 0, 0, 0, 612, '2023-10-25 11:24:44');
+INSERT INTO `group_list` VALUES (214, '-1001909433562', '', 'Тестовый канал 2', 'CHANNEL', 20, 'https://t.me/+aYU-bOyGsDlmMGM1', 0, 0, 0, 0, 8, 612, '2023-10-28 17:53:45');
 COMMIT;
 
 -- ----------------------------
@@ -185,9 +185,9 @@ COMMIT;
 DROP TABLE IF EXISTS `notify_msg`;
 CREATE TABLE `notify_msg` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL COMMENT '所属用户',
-  `group_id` int DEFAULT NULL COMMENT '所属组',
-  `msg` varchar(255) DEFAULT NULL COMMENT '消息',
+  `user_id` int DEFAULT NULL COMMENT 'Пользователь',
+  `group_id` int DEFAULT NULL COMMENT 'Группа/канал',
+  `msg` varchar(255) DEFAULT NULL COMMENT 'Сообщение',
   `creation_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=350 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

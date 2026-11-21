@@ -8,39 +8,39 @@ class Router:
     def __init__(self):
         self.routes = []
     def add_route(self, path_pattern, handler_class, handler_method):
-        # 将路径模式转换为正则表达式，并提取参数名
+        # Преобразование шаблона пути в регулярное выражение и извлечение имён параметров
         param_pattern = re.compile(r'<(\w+)>')
         path_pattern = param_pattern.sub(r'(?P<\1>[^/]+)', path_pattern)
         path_regex = re.compile(f"^{path_pattern}$")
         param_names = param_pattern.findall(path_pattern)
-        # 将路由规则存储为元组
+        # Сохранение правила маршрута в виде кортежа
         self.routes.append((path_regex, param_names, handler_class, handler_method))
     async def route(self, url, *args, **kwargs):
         parsed_url = urlparse(url)
         path = parsed_url.path
         query_params = parse_qs(parsed_url.query)
-        # 遍历所有路由规则，查找匹配的规则
+        # Перебор всех правил маршрутизации для поиска совпадения
         for path_regex, param_names, handler_class, handler_method in self.routes:
             match = path_regex.match(path)
             if not match:
                 continue
-            # 将路径参数存储到 query_params 参数中 中
+            # Сохранение параметров пути в query_params
             for param_name in param_names:
                 query_params[param_name] = match.group(param_name)
-            # 创建处理器实例，并调用相应方法，将查询参数和路径参数传递进去
+            # Создание экземпляра обработчика и вызов метода с параметрами запроса и пути
             try:
                 handler = handler_class(*args, **kwargs)
                 return await getattr(handler, handler_method)(**query_params)
             except (RPCError,Exception) as e:
-                raise ValueError(f"路由执行 {handler_method} 方法错误:{e}")
-        raise ValueError("开发中-导航页面不存在")
+                raise ValueError(f"Ошибка выполнения метода маршрута {handler_method}: {e}")
+        raise ValueError("В разработке — страница не найдена")
 
 class RestrictAccess:
-    # 访问控制
+    # Контроль доступа
     def __init__(self, Msg: Message = None):
         self.msg = Msg
     async def limit_check(self):
-        # 检测用户是否频繁访问触发限制
+        # Проверка превышения частоты запросов пользователем
         msg=self.msg
         try:
             count = redis_client.get(f"restrict{msg.chat.id}")
@@ -54,20 +54,20 @@ class RestrictAccess:
                 if int(count)==int(bot_config['restrict_limit']):
                     redis_client.incr(f"restrict{msg.chat.id}")
                     redis_client.expire(f"restrict{msg.chat.id}", 60*10)
-                    await msg.reply_text('访问频率过高限制访问-10')
+                    await msg.reply_text('Слишком частые запросы, доступ ограничен на 10 мин.')
                 return False
         except Exception as e:
-            logging.error(f"访问限制错误：{e}")
+            logging.error(f"Ошибка ограничения доступа: {e}")
             return False
 
 class UserAuth:
-    # 用户认证
+    # Аутентификация пользователя
     def __init__(self, Msg: Message = None):
         self.msg = Msg
     async def auth(self,FromUser=None):
         '''
-        用户验证系统:从redis内查询用户，有就判断权限返回，
-        没有就走数据库读取，如果数据库内不存在就创建一个新用户
+        Система проверки пользователя: поиск в redis; если найден — проверка прав,
+        если нет — чтение из БД, при отсутствии в БД создаётся новый пользователь
         :param message:
         :return:
         '''
@@ -83,12 +83,12 @@ class UserAuth:
                 user = dbUser.get_or_create(FromUser)
                 redis_client.set(name, json.dumps(user,default=str),ex=600)
             if user[4] == 1:
-                await msg.reply_text("账号已被管理员封禁")
+                await msg.reply_text("Аккаунт заблокирован администратором")
                 return False
             return user
         except Exception as e:
-            logging.error(f"账号访问错误{e}")
-            await msg.reply_text("账号访问错误")
+            logging.error(f"Ошибка доступа к аккаунту {e}")
+            await msg.reply_text("Ошибка доступа к аккаунту")
             return False
 
 class Var:
@@ -106,7 +106,7 @@ class Var:
         return False
 
 async def truncate_string(string, length):
-    '''标题截取'''
+    '''Обрезка заголовка'''
     pattern = r":[^:]+:"
     newStr = re.sub(pattern, "", emoji.demojize(string))
     if len(newStr) > length:
@@ -115,7 +115,7 @@ async def truncate_string(string, length):
         return newStr
 
 async def isPrivileges(chatId,typeG):
-    # 权限判断
+    # Проверка прав
     try:
         member = await app.get_chat_member(chatId, "me")
         if member.privileges:
@@ -143,12 +143,12 @@ def get_config():
                     bot_config[config[1]]=config[2]
         return bot_config
     except Exception as e:
-        logging.error('读取配置错误',e)
+        logging.error('Ошибка чтения конфигурации',e)
 
 async def timeJob(arr):
     await app.delete_messages(arr.get('id'), message_ids=arr.get('message_ids'))
-async def msgNotify(msg:Message,text='无',times=2):
-    msgId = await msg.reply_text(text=f"{str(text)} \n({times}秒后删除)")
+async def msgNotify(msg:Message,text='Нет',times=2):
+    msgId = await msg.reply_text(text=f"{str(text)} \n(удаление через {times} сек.)")
     scheduler.add_job(timeJob, trigger='date',run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
                       args=({'id': msgId.chat.id,'message_ids':msgId.id},))
 
@@ -162,7 +162,7 @@ async def isBotBlacklist(Client:Client,group):
                 isBot.append([member.user.first_name,member.user.username])
                 break
         except RPCError as e:
-            # 报错机器人没在群
+            # Бот не состоит в группе/канале
             pass
     return isBot
 
@@ -170,15 +170,15 @@ async def send_msg(chat_id,text):
     try:
         await app.send_message(chat_id=int(chat_id), text=text)
     except RPCError as e:
-        logging.error('发送消息失败:',chat_id,'-错误:',e)
+        logging.error('Ошибка отправки сообщения:',chat_id,'- Ошибка:',e)
 async def convoyDriving():
     fleet_list = db.select(f"SELECT * FROM fleet_list WHERE state = 1 ")
-    print('开始发车')
+    print('Запуск рассылки')
     if fleet_list:
         for fleet in fleet_list:
-            print('发车车次',fleet)
+            print('Подборка для рассылки',fleet)
             group_list = db.select(f"SELECT * FROM group_list WHERE fleet_list=%s AND state=2", (fleet[0],))
-            print('车内群组:', len(group_list))
+            print('Чатов в подборке:', len(group_list))
             if group_list and len(group_list)>=1:
                 for group in group_list:
                     user = db.select("SELECT * FROM chat_user WHERE id=%s", (group[12],))
@@ -186,34 +186,34 @@ async def convoyDriving():
                         continue
                     isPrivi = await isPrivileges(chatId=group[1], typeG=group[4])
                     if isPrivi == 1:
-                        print('发车检查:机器人被取消了权限-',group[3])
+                        print('Проверка рассылки: у бота отозваны права-',group[3])
                         db.update("UPDATE group_list SET state=0, WHERE id=%s", (group[0],))
-                        text = f"发车检查:《[{group[3]}]({group[6]})》 " \
-                               f"中机器人权限不足,此群即将下车请检查"
+                        text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
+                               f"у бота недостаточно прав, чат/канал будет снят с подборки, проверьте"
                         await send_msg(chat_id=user[0][1], text=text)
                         continue
                     elif isPrivi == 2:
-                        print('发车检查:机器人未入群-',group[3])
+                        print('Проверка рассылки: бот не в чате-',group[3])
                         db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
-                        text = f"发车检查:《[{group[3]}]({group[6]})》 " \
-                               f"中未检测到机器人,此群即将下车请检查"
+                        text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
+                               f"бот не обнаружен, чат/канал будет снят с подборки, проверьте"
                         await send_msg(chat_id=user[0][1], text=text)
                         continue
                     if group[7] !=0:
                         getMsg = await app.get_messages(chat_id=group[1], message_ids=int(group[7]))
                         if not getMsg.text:
                             db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
-                            text = f"发车检查:《[{group[3]}]({group[6]})》 " \
-                                   f"中未检测到上一次发送的消息,已做下车处理"
+                            text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
+                                   f"не найдено предыдущее сообщение, чат/канал снят с подборки"
                             await send_msg(chat_id=user[0][1], text=text)
                             continue
                     text_list = await marshalling(group_chat=group,fleet=fleet)
-                    print('组装的列表',text_list)
+                    print('Сформированный список',text_list)
                     if len(text_list)>2:
                         keyboard = [
                             [
-                                InlineKeyboardButton("➕ 参加互推", url=f"https://t.me/{bot_config.get('botUserName').replace('@', '')}"),
-                                InlineKeyboardButton("📣 供需发布", url=f"https://t.me/jindun")
+                                InlineKeyboardButton("➕ Участвовать в ВП", url=f"https://t.me/{bot_config.get('botUserName').replace('@', '')}"),
+                                InlineKeyboardButton("📣 Доска объявлений", url=f"https://t.me/jindun")
                             ]
                         ]
                         msg = await app.send_message(chat_id=group[1], text=''.join(text_list),
@@ -225,7 +225,7 @@ async def convoyDriving():
                                 if group[7] !=0:
                                     await app.delete_messages(chat_id=group[1], message_ids=int(group[7]))
                             except RPCError as e:
-                                print('删除上一条消息失败-',group[2])
+                                print('Ошибка удаления предыдущего сообщения-',group[2])
 async def marshalling(group_chat=None, fleet=None):
         new_car_list, index = [], 1
         new_car_list.append(f"**⛩️[{fleet[1]}|{bot_config['botName']}](https://t.me/{bot_config.get('botUserName').replace('@', '')}/)⛩️**\n")
@@ -244,10 +244,10 @@ async def marshalling(group_chat=None, fleet=None):
                         index += 1
                     else:
                         db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
-                        print('删除了链接')
+                        print('Ссылка удалена')
                         continue
                 except RPCError as e:
-                    print('编辑链接失败',e)
+                    print('Ошибка редактирования ссылки',e)
                     db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
                     continue
             else:
@@ -259,12 +259,12 @@ async def marshalling(group_chat=None, fleet=None):
                 db.update("UPDATE group_list SET input_fan=%s WHERE id=%s",
                               (link_group.member_count or 0, group_chat[0]))
         except RPCError as e:
-            print('更新群链接入群人数错误', e)
+            print('Ошибка обновления числа вступивших по ссылке', e)
         if len(advertising_list) >=2:
             new_car_list.append(f"\n**AD:[{advertising_list[1][1]}]({advertising_list[1][2]})**")
         if len(advertising_list) >= 3:
             new_car_list.append(f"\n**AD:[{advertising_list[2][1]}]({advertising_list[2][2]})**")
-        new_car_list.append(f"**\n互推交流: {bot_config.get('publicGroup')}**")
+        new_car_list.append(f"**\nЧат взаимопиара: {bot_config.get('publicGroup')}**")
         return new_car_list
 
 
