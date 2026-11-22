@@ -2,11 +2,10 @@
 from pyrogram import Client, filters
 from pyrogram.errors import RPCError,FloodWait,BadRequest,ChannelPrivate
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ForceReply, ReplyKeyboardMarkup, \
-    Message,ChatMemberUpdated,InputMediaVideo,InputMediaPhoto, MenuButton,BotCommand
+    Message, ChatMemberUpdated, BotCommand
 from urllib.parse import urlparse, parse_qs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-import os,re,time,requests,json,asyncio,uvloop,redis,qrcode,io,socket,hashlib,math,datetime,logging
-from random import randint
+import os, re, json, uvloop, redis, socket, math, datetime, logging
 uvloop.install()
 
 logging.basicConfig(

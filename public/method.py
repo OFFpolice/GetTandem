@@ -1,5 +1,4 @@
 import logging
-import os.path
 
 import emoji
 from config import *
@@ -80,7 +79,7 @@ class UserAuth:
                 user = json.loads(user)
             else:
                 dbUser = ChatUser(Msg=msg)
-                user = dbUser.get_or_create(FromUser)
+                user = await dbUser.get_or_create(FromUser)
                 redis_client.set(name, json.dumps(user,default=str),ex=600)
             if user[4] == 1:
                 await msg.reply_text("Аккаунт заблокирован администратором")
@@ -130,10 +129,10 @@ async def isPrivileges(chatId,typeG):
     except (FloodWait,BadRequest,ChannelPrivate) as e:
         return 2
 
-def get_config():
+async def get_config():
     try:
         configData=ConfigData()
-        configList = configData.get_config_list()
+        configList = await configData.get_config_list()
         if configList:
             bot_config["rejectText"]=[]
             for config in configList:
@@ -143,7 +142,7 @@ def get_config():
                     bot_config[config[1]]=config[2]
         return bot_config
     except Exception as e:
-        logging.error('Ошибка чтения конфигурации',e)
+        logging.error(f'Ошибка чтения конфигурации: {e}')
 
 async def timeJob(arr):
     await app.delete_messages(arr.get('id'), message_ids=arr.get('message_ids'))
@@ -172,29 +171,29 @@ async def send_msg(chat_id,text):
     except RPCError as e:
         logging.error('Ошибка отправки сообщения:',chat_id,'- Ошибка:',e)
 async def convoyDriving():
-    fleet_list = db.select(f"SELECT * FROM fleet_list WHERE state = 1 ")
+    fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1")
     print('Запуск рассылки')
     if fleet_list:
         for fleet in fleet_list:
             print('Подборка для рассылки',fleet)
-            group_list = db.select(f"SELECT * FROM group_list WHERE fleet_list=%s AND state=2", (fleet[0],))
+            group_list = await db.select("SELECT * FROM group_list WHERE fleet_list=? AND state=2", (fleet[0],))
             print('Чатов в подборке:', len(group_list))
             if group_list and len(group_list)>=1:
                 for group in group_list:
-                    user = db.select("SELECT * FROM chat_user WHERE id=%s", (group[12],))
+                    user = await db.select("SELECT * FROM chat_user WHERE id=?", (group[12],))
                     if not user:
                         continue
                     isPrivi = await isPrivileges(chatId=group[1], typeG=group[4])
                     if isPrivi == 1:
                         print('Проверка рассылки: у бота отозваны права-',group[3])
-                        db.update("UPDATE group_list SET state=0, WHERE id=%s", (group[0],))
+                        await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                         text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
                                f"у бота недостаточно прав, чат/канал будет снят с подборки, проверьте"
                         await send_msg(chat_id=user[0][1], text=text)
                         continue
                     elif isPrivi == 2:
                         print('Проверка рассылки: бот не в чате-',group[3])
-                        db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
+                        await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                         text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
                                f"бот не обнаружен, чат/канал будет снят с подборки, проверьте"
                         await send_msg(chat_id=user[0][1], text=text)
@@ -202,7 +201,7 @@ async def convoyDriving():
                     if group[7] !=0:
                         getMsg = await app.get_messages(chat_id=group[1], message_ids=int(group[7]))
                         if not getMsg.text:
-                            db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
+                            await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                             text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
                                    f"не найдено предыдущее сообщение, чат/канал снят с подборки"
                             await send_msg(chat_id=user[0][1], text=text)
@@ -220,7 +219,7 @@ async def convoyDriving():
                                                      reply_markup=InlineKeyboardMarkup(keyboard),
                                                      disable_web_page_preview=True, disable_notification=True)
                         if msg.id:
-                            db.update("UPDATE group_list SET msg_id=%s WHERE group_id=%s", (msg.id, group[1]))
+                            await db.update("UPDATE group_list SET msg_id=? WHERE group_id=?", (msg.id, str(group[1])))
                             try:
                                 if group[7] !=0:
                                     await app.delete_messages(chat_id=group[1], message_ids=int(group[7]))
@@ -232,7 +231,7 @@ async def marshalling(group_chat=None, fleet=None):
         advertising_list = await AdvertisingData().get_advertising_list()
         if len(advertising_list) >= 1:
             new_car_list.append(f"**AD:[{advertising_list[0][1]}]({advertising_list[0][2]})**\n\n")
-        group_list = db.select(f"SELECT * FROM group_list WHERE fleet_list=%s AND state=2", (fleet[0],))
+        group_list = await db.select("SELECT * FROM group_list WHERE fleet_list=? AND state=2", (fleet[0],))
         for group in group_list:
             if group[0] != group_chat[0]:
                 try:
@@ -243,12 +242,12 @@ async def marshalling(group_chat=None, fleet=None):
                             f"{index}: [{await truncate_string(group[3], 20)}]({link_group.invite_link}) \n")
                         index += 1
                     else:
-                        db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
+                        await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                         print('Ссылка удалена')
                         continue
                 except RPCError as e:
                     print('Ошибка редактирования ссылки',e)
-                    db.update("UPDATE group_list SET state=0 WHERE id=%s", (group[0],))
+                    await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                     continue
             else:
                 continue
@@ -256,7 +255,7 @@ async def marshalling(group_chat=None, fleet=None):
             link_group = await app.edit_chat_invite_link(int(group_chat[1]), group_chat[6])
             print(link_group.member_count)
             if link_group and link_group.is_revoked == False:
-                db.update("UPDATE group_list SET input_fan=%s WHERE id=%s",
+                await db.update("UPDATE group_list SET input_fan=? WHERE id=?",
                               (link_group.member_count or 0, group_chat[0]))
         except RPCError as e:
             print('Ошибка обновления числа вступивших по ссылке', e)

@@ -68,6 +68,11 @@ def command(client: Client):
     )))
 
 
+async def init_startup():
+    await db.init_db()
+    return await get_config()
+
+
 if __name__ == '__main__':
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,7 +82,7 @@ if __name__ == '__main__':
     else:
         try:
             logging.critical('Успешный запуск')
-            bot_config = get_config()
+            bot_config = app.loop.run_until_complete(init_startup())
             logging.critical(f"Загружен файл конфигурации: {bot_config}")
             scheduler.start()
             schedulerObj = scheduler.add_job(convoyDriving, "interval", seconds=60 * 30, misfire_grace_time=60)
