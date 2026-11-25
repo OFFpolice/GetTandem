@@ -1,11 +1,41 @@
-# Библиотека бота
-from pyrogram import Client, filters
-from pyrogram.errors import RPCError,FloodWait,BadRequest,ChannelPrivate
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ForceReply, ReplyKeyboardMarkup, \
-    Message, ChatMemberUpdated, BotCommand
+# Библиотека и конфигурация бота (aiogram 3)
+from aiogram import Bot, Dispatcher, F
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode, ChatType, ChatMemberStatus
+from aiogram.exceptions import (
+    TelegramAPIError,
+    TelegramBadRequest,
+    TelegramForbiddenError,
+    TelegramRetryAfter,
+)
+from aiogram.filters import Command, or_f
+from aiogram.types import (
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery,
+    ForceReply,
+    ReplyKeyboardMarkup,
+    Message,
+    ChatMemberUpdated,
+    BotCommand,
+    LinkPreviewOptions,
+    ChatMemberAdministrator,
+    ChatMemberOwner,
+)
 from urllib.parse import urlparse, parse_qs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-import os, re, json, uvloop, redis, socket, math, datetime, logging
+import asyncio
+import html
+import os
+import re
+import json
+import uvloop
+import redis
+import socket
+import math
+import datetime
+import logging
+
 uvloop.install()
 
 logging.basicConfig(
@@ -15,57 +45,34 @@ logging.basicConfig(
     filename='run.log'
 )
 
-
-
-redis_client = redis.Redis(host='172.18.0.2',port=6379,db=2,password='123456')
+redis_client = redis.Redis(host='127.0.0.1', port=6379, db=2)
 
 bot_config = {
-    "botName":"Бот не настроен",
-    "indexTxt":"Приветственный текст не настроен",
-    "botUserName":"Бот не настроен",
-    "publicGroup":"Не настроено",
-    "adminGroup":1,
-    "msgGroup":1,
-    "notifyType":1,
-    "rejectText":[],
-    "restrict_limit":60,
+    "botName": "Бот не настроен",
+    "indexTxt": "Приветственный текст не настроен",
+    "botUserName": "Бот не настроен",
+    "publicGroup": "Не настроено",
+    "adminGroup": 1,
+    "msgGroup": 1,
+    "notifyType": 1,
+    "rejectText": [],
+    "restrict_limit": 60,
     "video": ''
 }
-scheduler = AsyncIOScheduler(timezone='Asia/Shanghai', job_defaults={'max_instances': 1, 'coalesce': False})
 
-cli_obj={
-    "name":"HuTuiBot",
-    "api_id":123,
-    "api_hash":"123",
-    "bot_token":"123",
-    "proxy":False,
-    "proxyDict":dict(scheme="socks5", hostname="127.0.0.1", port=1080),
-    "session":False,
-    "sessionTxt":"session.txt"
+scheduler = AsyncIOScheduler(
+    timezone='Asia/Shanghai',
+    job_defaults={'max_instances': 1, 'coalesce': False}
+)
+
+cli_obj = {
+    "name": "HuTuiBot",
+    "bot_token": "9228971316:AAF0_3xXw5tfe510TAAPC4IqYZk2vXKLI4E",
 }
-# cli_obj={
-#     "name":"HuTuiBot",
-#     "api_id":20498498,
-#     "api_hash":"25db36a7408a0881455483f13a395c1d",
-#     "bot_token":"6842986879:AAGr83oJP8sh4Sz1aP91U6qm2oANNaxCoZA",
-#     "proxy":False,
-#     "proxyDict":dict(scheme="socks5", hostname="127.0.0.1", port=1080),
-#     "session":False,
-#     "sessionTxt":"session.txt"
-# }
 
-def ClientObj(obj):
-    if os.path.exists(obj["sessionTxt"]) and obj["session"]:
-        with open(obj["sessionTxt"], "r") as f:
-            content = f.read()
-        if obj["proxy"]:
-            return Client("HuTuiBot", session_string=content,proxy=obj["proxyDict"])
-        else:
-            return Client("HuTuiBot", session_string=content)
-    else:
-        if obj["proxy"]:
-            return Client(obj["name"], api_id=obj["api_id"], api_hash=obj["api_hash"],bot_token=obj["bot_token"], proxy=obj["proxyDict"])
-        else:
-            return Client(obj["name"], api_id=obj["api_id"], api_hash=obj["api_hash"], bot_token=obj["bot_token"])
-
-app = ClientObj(obj=cli_obj)
+bot = Bot(
+    token=cli_obj["bot_token"],
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+)
+dp = Dispatcher()
+app = bot

@@ -1,76 +1,92 @@
 import logging
 
-from pyrogram.handlers import *
+from config import *
 from monitor.command import *
 from monitor.input import *
-from config import *
 
 
-def command(client: Client):
-    '''Команда запуска или главная страница'''
-    client.add_handler(MessageHandler(start_handler, filters.command(["start", "index"]) & filters.private))
+def register_handlers(dispatcher: Dispatcher):
+    '''Регистрация обработчиков aiogram 3'''
+    # Команда запуска или главная страница
+    dispatcher.message.register(
+        start_handler,
+        Command("start", "index"),
+        F.chat.type == ChatType.PRIVATE,
+    )
     # Команда вызова панели администратора
-    client.add_handler(
-        MessageHandler(admii_command, filters.private & (filters.command("admin") | filters.regex("⚙Админ-панель"))))
+    dispatcher.message.register(
+        admii_command,
+        F.chat.type == ChatType.PRIVATE,
+        or_f(Command("admin"), F.text.contains("⚙Админ-панель")),
+    )
+    # Заглушка для неактивных кнопок
+    dispatcher.callback_query.register(noop_callback_handler, F.data == "-")
     # Маршруты обычных пользователей
-    client.add_handler(CallbackQueryHandler(callback_query_router, filters.create(
-        lambda _, __, query: (query.data and query.data.startswith("r/")))))
+    dispatcher.callback_query.register(callback_query_router, F.data.startswith("r/"))
     # Маршруты администратора
-    client.add_handler(CallbackQueryHandler(admin_callback_query_router, filters.create(
-        lambda _, __, query: (query.data and query.data.startswith("a/")))))
-    # Обновление статуса участника в чате/канале
-    client.add_handler(ChatMemberUpdatedHandler(handle_chat_member_update))
-    # # Мониторинг удалённых сообщений пользователя
-    # client.add_handler(DeletedMessagesHandler(delete_message))
-    # # Пользователь изменил сообщение
-    # client.add_handler(EditedMessageHandler(edited_message))
+    dispatcher.callback_query.register(admin_callback_query_router, F.data.startswith("a/"))
+    # Обновление статуса бота в каналах
+    dispatcher.my_chat_member.register(handle_chat_member_update)
+
     # Обработчик ввода ответа на настройку бота
-    client.add_handler(MessageHandler(admin_config_reply_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("📲")
-        )
-    )))
+    dispatcher.message.register(
+        admin_config_reply_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("📲"),
+    )
     # Обработчик ввода управления рекламой
-    client.add_handler(MessageHandler(admin_advertising_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("🗞️")
-        )
-    )))
+    dispatcher.message.register(
+        admin_advertising_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("🗞️"),
+    )
     # Обработчик ввода управления подборками
-    client.add_handler(MessageHandler(admin_car_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("🚒")
-        )
-    )))
-    # Обработчик ввода управления подборками в админ-группе
-    client.add_handler(MessageHandler(admin_car_group_input, filters.group & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("💭")
-        )
-    )))
-    # Обработчик ввода управления группами и каналами
-    client.add_handler(MessageHandler(admin_group_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("🏵️")
-        )
-    )))
+    dispatcher.message.register(
+        admin_car_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("🚒"),
+    )
+    # Обработчик ввода своей причины отказа (админ-группа или ЛС админа)
+    dispatcher.message.register(
+        admin_car_group_input,
+        F.reply_to_message.text.startswith("💭"),
+    )
+    # Обработчик ввода управления каналами
+    dispatcher.message.register(
+        admin_group_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("🏵️"),
+    )
     # Обработчик ввода чёрного списка ботов
-    client.add_handler(MessageHandler(admin_bot_blacklist_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("🤖")
-        )
-    )))
+    dispatcher.message.register(
+        admin_bot_blacklist_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("🤖"),
+    )
     # Обработчик ввода управления пользователями
-    client.add_handler(MessageHandler(admin_user_input, filters.private & filters.reply & filters.create(
-        lambda _, __, query: (
-                query.reply_to_message.text and query.reply_to_message.text.startswith("👨‍💻")
-        )
-    )))
+    dispatcher.message.register(
+        admin_user_input,
+        F.chat.type == ChatType.PRIVATE,
+        F.reply_to_message.text.startswith("👨‍💻"),
+    )
 
 
 async def init_startup():
     await db.init_db()
     return await get_config()
+
+
+async def main():
+    global bot_config
+    logging.critical('Успешный запуск (aiogram 3)')
+    bot_config = await init_startup()
+    logging.critical(f"Загружен файл конфигурации: {bot_config}")
+    scheduler.start()
+    schedulerObj = scheduler.add_job(convoyDriving, "interval", seconds=60 * 30, misfire_grace_time=60)
+    logging.critical(f"Время выполнения планировщика: {schedulerObj}")
+    register_handlers(dp)
+    await bot.delete_webhook(drop_pending_updates=False)
+    await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
@@ -81,13 +97,8 @@ if __name__ == '__main__':
         print('Бот уже запущен')
     else:
         try:
-            logging.critical('Успешный запуск')
-            bot_config = app.loop.run_until_complete(init_startup())
-            logging.critical(f"Загружен файл конфигурации: {bot_config}")
-            scheduler.start()
-            schedulerObj = scheduler.add_job(convoyDriving, "interval", seconds=60 * 30, misfire_grace_time=60)
-            logging.critical(f"Время выполнения планировщика: {schedulerObj}")
-            command(app)
-            app.run()
+            asyncio.run(main())
+        except (KeyboardInterrupt, SystemExit):
+            logging.info("Бот остановлен")
         except Exception as e:
-            logging.error(e)
+            logging.error(f"Критическая ошибка запуска: {e}")

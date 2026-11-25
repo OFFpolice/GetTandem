@@ -1,7 +1,8 @@
+aiogram==3.20.0.post0
+pydantic<2.11
 APScheduler==3.10.1
 emoji==2.8.0
 aiosqlite==0.20.0
-Pyrogram==2.0.106
 redis==4.5.4
-TgCrypto==1.2.5
+setuptools<81
 uvloop==0.17.0

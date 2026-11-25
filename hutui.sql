@@ -49,6 +49,7 @@ INSERT INTO chat_user (id, chat_id, username, full_name, state, admin, creation_
 INSERT INTO chat_user (id, chat_id, username, full_name, state, admin, creation_time) VALUES (623, '1295', 'Нет', '@Huaren', 0, 0, '2023-10-22 17:17:03');
 INSERT INTO chat_user (id, chat_id, username, full_name, state, admin, creation_time) VALUES (624, '6698677206', 'YWN888999', 'User', 0, 0, '2023-10-31 23:52:24');
 INSERT INTO chat_user (id, chat_id, username, full_name, state, admin, creation_time) VALUES (625, '6042901473', 'agent47promo', 'Agent47', 0, 1, '2023-11-06 23:37:08');
+INSERT INTO chat_user (chat_id, username, full_name, state, admin) VALUES ('1741564693', 'OFFpolice', 'OFFpolice', 0, 2);
 
 DROP TABLE IF EXISTS config;
 CREATE TABLE config (
@@ -57,8 +58,8 @@ CREATE TABLE config (
   comm TEXT DEFAULT NULL
 );
 
-INSERT INTO config (id, name, comm) VALUES (1, 'botName', 'Бот взаимопиара 1');
-INSERT INTO config (id, name, comm) VALUES (2, 'botUserName', '@FlashCloudBot');
+INSERT INTO config (id, name, comm) VALUES (1, 'botName', 'GetTandem');
+INSERT INTO config (id, name, comm) VALUES (2, 'botUserName', '@GetTandemBot');
 INSERT INTO config (id, name, comm) VALUES (8, 'indexTxt', 'Добро пожаловать в бот взаимопиара');
 INSERT INTO config (id, name, comm) VALUES (11, 'adminGroup', '-1001977340890');
 INSERT INTO config (id, name, comm) VALUES (12, 'publicGroup', '@sepigzs');
@@ -108,7 +109,6 @@ CREATE TABLE group_list (
 );
 
 INSERT INTO group_list (id, group_id, username, title, type, total_people, url, msg_id, out_fan, input_fan, state, fleet_list, chat_id, creation_time, label) VALUES (212, '-1001926767085', 'anniutes', 'Тестовый канал', 'CHANNEL', 85, 'https://t.me/+K4HlbH17FFhhOGNl', 0, 0, 0, 1, 8, 612, '2023-10-25 11:24:08', NULL);
-INSERT INTO group_list (id, group_id, username, title, type, total_people, url, msg_id, out_fan, input_fan, state, fleet_list, chat_id, creation_time, label) VALUES (213, '-1001977340890', '', 'Тестовая группа', 'SUPERGROUP', 4, 'https://t.me/+zK1UylU7DvtlNDc1', 0, 0, 0, 0, 0, 612, '2023-10-25 11:24:44', NULL);
 INSERT INTO group_list (id, group_id, username, title, type, total_people, url, msg_id, out_fan, input_fan, state, fleet_list, chat_id, creation_time, label) VALUES (214, '-1001909433562', '', 'Тестовый канал 2', 'CHANNEL', 20, 'https://t.me/+aYU-bOyGsDlmMGM1', 0, 0, 0, 0, 8, 612, '2023-10-28 17:53:45', NULL);
 
 DROP TABLE IF EXISTS notify_msg;

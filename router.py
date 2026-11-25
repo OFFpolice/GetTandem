@@ -9,6 +9,7 @@ router.add_route('r/channel', Channel, 'index')
 router.add_route('r/channel_fleet', Channel, 'fleet_info')
 router.add_route('r/channel_apply', Channel, 'add_fleet')
 router.add_route('r/channel_submit', Channel, 'submit_fleet')
+router.add_route('r/del_msg', User, 'backReview')
 
 router.add_route('a/admin', Admin, 'index')
 router.add_route('a/init_menu', Admin, 'initialization')
@@ -33,6 +34,8 @@ router.add_route('a/car_ban', Car, 'banGroup')
 
 
 router.add_route('a/review_pass', Review, 'passReview')
+router.add_route('a/pick_fleet', Review, 'pickFleet')
+router.add_route('a/assign_fleet', Review, 'assignFleet')
 router.add_route('a/review_reject', Review, 'rejectReview')
 router.add_route('a/review_reason', Review, 'rejectReason')
 router.add_route('a/custom_reason', Review, 'inputBot')

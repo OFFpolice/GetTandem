@@ -1,0 +1,1285 @@
+2026-11-22 21:56:42,323 - root - CRITICAL - Успешный запуск
+2026-11-22 21:56:42,336 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'Бот взаимопиара 1', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@FlashCloudBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 21:56:42,337 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 21:56:42,354 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 21:56:42,354 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 06:26:42 CST)
+2026-11-22 21:56:42,707 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2026-11-22 21:56:42,707 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 21:56:42,719 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 21:56:43,773 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2026-11-22 21:56:43,773 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 21:56:43,778 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 21:56:43,787 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 21:56:43,797 - pyrogram.session.session - INFO - NetworkTask started
+2026-11-22 21:56:43,837 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2026-11-22 21:56:43,837 - pyrogram.session.session - INFO - Device: CPython 3.11.2 - Pyrogram 2.0.106
+2026-11-22 21:56:43,837 - pyrogram.session.session - INFO - System: Linux 4.19.0-gvisor (en)
+2026-11-22 21:56:43,837 - pyrogram.session.session - INFO - Session started
+2026-11-22 21:56:43,838 - pyrogram.session.session - INFO - PingTask started
+2026-11-22 21:56:43,910 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2026-11-22 22:10:06,354 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-11-22 22:10:06,358 - pyrogram.dispatcher - INFO - Stopped 12 HandlerTasks
+2026-11-22 22:10:06,358 - pyrogram.session.session - INFO - PingTask stopped
+2026-11-22 22:10:06,358 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 22:10:06,358 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-11-22 22:10:06,358 - pyrogram.session.session - INFO - Session stopped
+2026-11-22 22:10:17,552 - root - CRITICAL - Успешный запуск
+2026-11-22 22:10:17,559 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'Бот взаимопиара 1', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@FlashCloudBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 22:10:17,560 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 22:10:17,577 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 22:10:17,577 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 06:40:17 CST)
+2026-11-22 22:10:17,880 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 22:10:17,893 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 22:10:17,894 - pyrogram.session.session - INFO - NetworkTask started
+2026-11-22 22:10:17,933 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2026-11-22 22:10:17,933 - pyrogram.session.session - INFO - Device: CPython 3.11.2 - Pyrogram 2.0.106
+2026-11-22 22:10:17,933 - pyrogram.session.session - INFO - System: Linux 4.19.0-gvisor (en)
+2026-11-22 22:10:17,933 - pyrogram.session.session - INFO - Session started
+2026-11-22 22:10:17,934 - pyrogram.session.session - INFO - PingTask started
+2026-11-22 22:10:17,973 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2026-11-22 22:16:43,937 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-11-22 22:16:43,940 - pyrogram.dispatcher - INFO - Stopped 12 HandlerTasks
+2026-11-22 22:16:43,940 - pyrogram.session.session - INFO - PingTask stopped
+2026-11-22 22:16:43,940 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 22:16:43,941 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-11-22 22:16:43,941 - pyrogram.session.session - INFO - Session stopped
+2026-11-22 22:16:47,439 - root - CRITICAL - Успешный запуск
+2026-11-22 22:16:47,445 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 22:16:47,446 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 22:16:47,459 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 22:16:47,459 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 06:46:47 CST)
+2026-11-22 22:16:47,763 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 22:16:47,779 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 22:16:47,781 - pyrogram.session.session - INFO - NetworkTask started
+2026-11-22 22:16:47,835 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2026-11-22 22:16:47,835 - pyrogram.session.session - INFO - Device: CPython 3.11.2 - Pyrogram 2.0.106
+2026-11-22 22:16:47,835 - pyrogram.session.session - INFO - System: Linux 4.19.0-gvisor (en)
+2026-11-22 22:16:47,835 - pyrogram.session.session - INFO - Session started
+2026-11-22 22:16:47,837 - pyrogram.session.session - INFO - PingTask started
+2026-11-22 22:16:47,888 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2026-11-22 22:16:51,379 - root - INFO - a/admin
+2026-11-22 22:19:24,114 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-11-22 22:19:24,116 - pyrogram.dispatcher - INFO - Stopped 12 HandlerTasks
+2026-11-22 22:19:24,117 - pyrogram.session.session - INFO - PingTask stopped
+2026-11-22 22:19:24,117 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 22:19:24,117 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-11-22 22:19:24,117 - pyrogram.session.session - INFO - Session stopped
+2026-11-22 22:19:27,585 - root - CRITICAL - Успешный запуск
+2026-11-22 22:19:27,590 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 22:19:27,592 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 22:19:27,605 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 22:19:27,605 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 06:49:27 CST)
+2026-11-22 22:19:27,914 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 22:19:27,931 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 22:19:27,932 - pyrogram.session.session - INFO - NetworkTask started
+2026-11-22 22:19:28,021 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2026-11-22 22:19:28,022 - pyrogram.session.session - INFO - Device: CPython 3.11.2 - Pyrogram 2.0.106
+2026-11-22 22:19:28,022 - pyrogram.session.session - INFO - System: Linux 4.19.0-gvisor (en)
+2026-11-22 22:19:28,022 - pyrogram.session.session - INFO - Session started
+2026-11-22 22:19:28,023 - pyrogram.session.session - INFO - PingTask started
+2026-11-22 22:19:28,088 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2026-11-22 22:32:28,624 - root - INFO - r/channel
+2026-11-22 22:32:30,389 - root - INFO - r/index
+2026-11-22 22:32:37,919 - root - INFO - a/group
+2026-11-22 22:32:40,944 - root - INFO - a/admin
+2026-11-22 22:32:42,312 - root - INFO - a/user
+2026-11-22 22:32:46,454 - root - INFO - a/admin
+2026-11-22 22:34:18,367 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-11-22 22:34:18,370 - pyrogram.dispatcher - INFO - Stopped 12 HandlerTasks
+2026-11-22 22:34:18,370 - pyrogram.session.session - INFO - PingTask stopped
+2026-11-22 22:34:18,371 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 22:34:18,371 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-11-22 22:34:18,371 - pyrogram.session.session - INFO - Session stopped
+2026-11-22 22:34:21,930 - root - CRITICAL - Успешный запуск
+2026-11-22 22:34:21,937 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 22:34:21,938 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 22:34:21,952 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 22:34:21,952 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 07:04:21 CST)
+2026-11-22 22:34:22,256 - pyrogram.connection.connection - INFO - Connecting...
+2026-11-22 22:34:22,268 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2026-11-22 22:34:22,270 - pyrogram.session.session - INFO - NetworkTask started
+2026-11-22 22:34:22,325 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2026-11-22 22:34:22,326 - pyrogram.session.session - INFO - Device: CPython 3.11.2 - Pyrogram 2.0.106
+2026-11-22 22:34:22,326 - pyrogram.session.session - INFO - System: Linux 4.19.0-gvisor (en)
+2026-11-22 22:34:22,326 - pyrogram.session.session - INFO - Session started
+2026-11-22 22:34:22,327 - pyrogram.session.session - INFO - PingTask started
+2026-11-22 22:34:22,385 - pyrogram.dispatcher - INFO - Started 12 HandlerTasks
+2026-11-22 23:04:06,307 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-11-22 23:04:06,310 - pyrogram.dispatcher - INFO - Stopped 12 HandlerTasks
+2026-11-22 23:04:06,310 - pyrogram.session.session - INFO - PingTask stopped
+2026-11-22 23:04:06,310 - pyrogram.connection.connection - INFO - Disconnected
+2026-11-22 23:04:06,310 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-11-22 23:04:06,310 - pyrogram.session.session - INFO - Session stopped
+2026-11-22 23:04:13,328 - root - CRITICAL - Успешный запуск (aiogram 3)
+2026-11-22 23:04:13,337 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 23:04:13,339 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 23:04:13,354 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 23:04:13,354 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 07:34:13 CST)
+2026-11-22 23:04:13,398 - aiogram.dispatcher - INFO - Start polling
+2026-11-22 23:04:13,411 - aiogram.dispatcher - INFO - Run polling for bot @GetTandemBot id=9228971316 - 'GetTandem'
+2026-11-22 23:04:13,557 - aiogram.event - INFO - Update id=924767794 is not handled. Duration 70 ms by bot id=9228971316
+2026-11-22 23:04:13,557 - aiogram.event - ERROR - Cause exception while process update id=924767794 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,564 - aiogram.event - INFO - Update id=924767799 is not handled. Duration 76 ms by bot id=9228971316
+2026-11-22 23:04:13,564 - aiogram.event - ERROR - Cause exception while process update id=924767799 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,567 - aiogram.event - INFO - Update id=924767800 is not handled. Duration 76 ms by bot id=9228971316
+2026-11-22 23:04:13,567 - aiogram.event - ERROR - Cause exception while process update id=924767800 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,569 - aiogram.event - INFO - Update id=924767801 is not handled. Duration 78 ms by bot id=9228971316
+2026-11-22 23:04:13,569 - aiogram.event - ERROR - Cause exception while process update id=924767801 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,570 - aiogram.event - INFO - Update id=924767804 is not handled. Duration 80 ms by bot id=9228971316
+2026-11-22 23:04:13,570 - aiogram.event - ERROR - Cause exception while process update id=924767804 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,572 - aiogram.event - INFO - Update id=924767806 is not handled. Duration 82 ms by bot id=9228971316
+2026-11-22 23:04:13,572 - aiogram.event - ERROR - Cause exception while process update id=924767806 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,574 - aiogram.event - INFO - Update id=924767809 is not handled. Duration 82 ms by bot id=9228971316
+2026-11-22 23:04:13,574 - aiogram.event - ERROR - Cause exception while process update id=924767809 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,579 - aiogram.event - INFO - Update id=924767814 is not handled. Duration 85 ms by bot id=9228971316
+2026-11-22 23:04:13,579 - aiogram.event - ERROR - Cause exception while process update id=924767814 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,581 - aiogram.event - INFO - Update id=924767820 is not handled. Duration 86 ms by bot id=9228971316
+2026-11-22 23:04:13,581 - aiogram.event - ERROR - Cause exception while process update id=924767820 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,583 - aiogram.event - INFO - Update id=924767826 is not handled. Duration 87 ms by bot id=9228971316
+2026-11-22 23:04:13,583 - aiogram.event - ERROR - Cause exception while process update id=924767826 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,585 - aiogram.event - INFO - Update id=924767828 is not handled. Duration 88 ms by bot id=9228971316
+2026-11-22 23:04:13,585 - aiogram.event - ERROR - Cause exception while process update id=924767828 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,587 - aiogram.event - INFO - Update id=924767837 is not handled. Duration 90 ms by bot id=9228971316
+2026-11-22 23:04:13,587 - aiogram.event - ERROR - Cause exception while process update id=924767837 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,588 - aiogram.event - INFO - Update id=924767863 is not handled. Duration 89 ms by bot id=9228971316
+2026-11-22 23:04:13,588 - aiogram.event - ERROR - Cause exception while process update id=924767863 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,590 - aiogram.event - INFO - Update id=924767874 is not handled. Duration 88 ms by bot id=9228971316
+2026-11-22 23:04:13,590 - aiogram.event - ERROR - Cause exception while process update id=924767874 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,592 - aiogram.event - INFO - Update id=924767876 is not handled. Duration 92 ms by bot id=9228971316
+2026-11-22 23:04:13,593 - aiogram.event - ERROR - Cause exception while process update id=924767876 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,594 - aiogram.event - INFO - Update id=924767877 is not handled. Duration 92 ms by bot id=9228971316
+2026-11-22 23:04:13,594 - aiogram.event - ERROR - Cause exception while process update id=924767877 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,596 - aiogram.event - INFO - Update id=924767881 is not handled. Duration 94 ms by bot id=9228971316
+2026-11-22 23:04:13,596 - aiogram.event - ERROR - Cause exception while process update id=924767881 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,597 - aiogram.event - INFO - Update id=924767882 is not handled. Duration 94 ms by bot id=9228971316
+2026-11-22 23:04:13,597 - aiogram.event - ERROR - Cause exception while process update id=924767882 by bot id=9228971316
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/telegram.py", line 113, in trigger
+    result, data = await handler.check(event, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 90, in check
+    check = await event_filter.call(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/aiogram/dispatcher/event/handler.py", line 44, in call
+    return await asyncio.to_thread(wrapped)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 97, in resolve
+    return self._resolve(value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/magic.py", line 81, in _resolve
+    value = operation.resolve(value=value, initial_value=initial_value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/magic_filter/operations/combination.py", line 36, in resolve
+    return self.combinator(resolve_if_needed(self.left, initial_value), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for |: 'Command' and 'bool'
+2026-11-22 23:04:13,603 - aiogram.event - INFO - Update id=924767850 is handled. Duration 105 ms by bot id=9228971316
+2026-11-22 23:04:13,604 - aiogram.event - INFO - Update id=924767852 is handled. Duration 104 ms by bot id=9228971316
+2026-11-22 23:04:13,609 - aiogram.event - INFO - Update id=924767851 is handled. Duration 112 ms by bot id=9228971316
+2026-11-22 23:04:13,613 - aiogram.event - INFO - Update id=924767853 is handled. Duration 114 ms by bot id=9228971316
+2026-11-22 23:04:13,735 - aiogram.event - INFO - Update id=924767813 is handled. Duration 242 ms by bot id=9228971316
+2026-11-22 23:04:13,740 - aiogram.event - INFO - Update id=924767790 is handled. Duration 256 ms by bot id=9228971316
+2026-11-22 23:04:13,768 - aiogram.event - INFO - Update id=924767807 is handled. Duration 275 ms by bot id=9228971316
+2026-11-22 23:04:13,806 - aiogram.event - INFO - Update id=924767789 is handled. Duration 324 ms by bot id=9228971316
+2026-11-22 23:04:13,838 - aiogram.event - INFO - Update id=924767811 is handled. Duration 345 ms by bot id=9228971316
+2026-11-22 23:04:13,867 - aiogram.event - INFO - Update id=924767793 is handled. Duration 381 ms by bot id=9228971316
+2026-11-22 23:04:13,895 - aiogram.event - INFO - Update id=924767795 is handled. Duration 408 ms by bot id=9228971316
+2026-11-22 23:04:13,923 - aiogram.event - INFO - Update id=924767825 is handled. Duration 427 ms by bot id=9228971316
+2026-11-22 23:04:13,960 - aiogram.event - INFO - Update id=924767862 is handled. Duration 460 ms by bot id=9228971316
+2026-11-22 23:04:13,985 - aiogram.event - INFO - Update id=924767821 is handled. Duration 492 ms by bot id=9228971316
+2026-11-22 23:04:14,020 - aiogram.event - INFO - Update id=924767805 is handled. Duration 529 ms by bot id=9228971316
+2026-11-22 23:04:14,707 - aiogram.event - INFO - Update id=924767791 is handled. Duration 1221 ms by bot id=9228971316
+2026-11-22 23:04:14,751 - aiogram.event - INFO - Update id=924767792 is handled. Duration 1265 ms by bot id=9228971316
+2026-11-22 23:04:14,777 - aiogram.event - INFO - Update id=924767796 is handled. Duration 1288 ms by bot id=9228971316
+2026-11-22 23:04:14,806 - aiogram.event - INFO - Update id=924767875 is handled. Duration 1305 ms by bot id=9228971316
+2026-11-22 23:04:14,836 - aiogram.event - INFO - Update id=924767803 is handled. Duration 1345 ms by bot id=9228971316
+2026-11-22 23:04:14,863 - aiogram.event - INFO - Update id=924767827 is handled. Duration 1367 ms by bot id=9228971316
+2026-11-22 23:04:14,888 - aiogram.event - INFO - Update id=924767878 is handled. Duration 1386 ms by bot id=9228971316
+2026-11-22 23:04:14,931 - aiogram.event - INFO - Update id=924767797 is handled. Duration 1444 ms by bot id=9228971316
+2026-11-22 23:04:14,949 - aiogram.event - INFO - Update id=924767808 is handled. Duration 1457 ms by bot id=9228971316
+2026-11-22 23:04:16,729 - aiogram.event - INFO - Update id=924767802 is handled. Duration 3238 ms by bot id=9228971316
+2026-11-22 23:04:16,732 - aiogram.event - INFO - Update id=924767849 is handled. Duration 3235 ms by bot id=9228971316
+2026-11-22 23:04:16,746 - aiogram.event - INFO - Update id=924767798 is handled. Duration 3256 ms by bot id=9228971316
+2026-11-22 23:04:16,770 - aiogram.event - INFO - Update id=924767843 is handled. Duration 3273 ms by bot id=9228971316
+2026-11-22 23:04:44,866 - aiogram.dispatcher - WARNING - Received SIGTERM signal
+2026-11-22 23:04:44,867 - aiogram.dispatcher - INFO - Polling stopped for bot @GetTandemBot id=9228971316 - 'GetTandem'
+2026-11-22 23:04:44,867 - aiogram.dispatcher - INFO - Polling stopped
+2026-11-22 23:04:51,796 - root - CRITICAL - Успешный запуск (aiogram 3)
+2026-11-22 23:04:51,803 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '0', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 23:04:51,804 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 23:04:51,822 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 23:04:51,822 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 07:34:51 CST)
+2026-11-22 23:04:51,870 - aiogram.dispatcher - INFO - Start polling
+2026-11-22 23:04:51,884 - aiogram.dispatcher - INFO - Run polling for bot @GetTandemBot id=9228971316 - 'GetTandem'
+2026-11-22 23:19:03,261 - aiogram.event - INFO - Update id=924767929 is handled. Duration 43 ms by bot id=9228971316
+2026-11-22 23:19:12,290 - aiogram.event - INFO - Update id=924767930 is handled. Duration 51 ms by bot id=9228971316
+2026-11-22 23:20:27,476 - aiogram.dispatcher - WARNING - Received SIGTERM signal
+2026-11-22 23:20:27,477 - aiogram.dispatcher - INFO - Polling stopped for bot @GetTandemBot id=9228971316 - 'GetTandem'
+2026-11-22 23:20:27,478 - aiogram.dispatcher - INFO - Polling stopped
+2026-11-22 23:20:34,444 - root - CRITICAL - Успешный запуск (aiogram 3)
+2026-11-22 23:20:34,451 - root - CRITICAL - Загружен файл конфигурации: {'botName': 'GetTandem', 'indexTxt': 'Добро пожаловать в бот взаимопиара', 'botUserName': '@GetTandemBot', 'publicGroup': '@sepigzs', 'adminGroup': '1', 'msgGroup': '-', 'notifyType': '1', 'rejectText': ['В этой подборке уже нет мест, выберите другую', 'Не соответствует тематике', 'Низкое качество контента', 'Недостаточно просмотров'], 'restrict_limit': '30', 'video': ''}
+2026-11-22 23:20:34,452 - apscheduler.scheduler - INFO - Scheduler started
+2026-11-22 23:20:34,466 - apscheduler.scheduler - INFO - Added job "convoyDriving" to job store "default"
+2026-11-22 23:20:34,467 - root - CRITICAL - Время выполнения планировщика: convoyDriving (trigger: interval[0:30:00], next run at: 2026-11-23 07:50:34 CST)
+2026-11-22 23:20:34,527 - aiogram.dispatcher - INFO - Start polling
+2026-11-22 23:20:34,545 - aiogram.dispatcher - INFO - Run polling for bot @GetTandemBot id=9228971316 - 'GetTandem'

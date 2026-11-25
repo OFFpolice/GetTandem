@@ -1,131 +1,54 @@
+import logging
 from config import *
 from data.data import db
+from public.method import isPrivileges as HavePermission, truncate_string, format_tg_url, to_peer_id, html_link, esc
 
-# ====== Модуль отправки сообщений и рассылки подборок ======
+# ====== Модуль отправки сообщений и рассылки подборок (aiogram 3) ======
 
-async def isPrivileges(chatId):
+
+async def checkPrivileges(chatId):
     # Проверка прав
     try:
-        groupType = await app.get_chat(chatId)
-        member = await app.get_chat_member(chatId, "me")
-        if member.privileges:
-            privi = member.privileges
-            if groupType.type.name == 'CHANNEL':
-                if privi.can_delete_messages and privi.can_post_messages and privi.can_edit_messages and privi.can_invite_users:
-                    return 0,groupType
+        groupType = await bot.get_chat(to_peer_id(chatId))
+        member = await bot.get_chat_member(to_peer_id(chatId), bot.id)
+        if isinstance(member, ChatMemberOwner):
+            return 0, groupType
+        if isinstance(member, ChatMemberAdministrator):
+            if str(groupType.type).upper() == 'CHANNEL':
+                if (
+                    member.can_delete_messages
+                    and member.can_post_messages
+                    and member.can_edit_messages
+                    and member.can_invite_users
+                ):
+                    return 0, groupType
             else:
-                if privi.can_delete_messages and privi.can_invite_users:
-                    return 0,groupType
-        return 1,groupType
-    except (FloodWait,BadRequest,ChannelPrivate) as e:
+                if member.can_delete_messages and member.can_invite_users:
+                    return 0, groupType
+        return 1, groupType
+    except TelegramAPIError:
         return 2, {}
+
+
 async def timeJob(arr):
-    await app.delete_messages(arr.get('id'), message_ids=arr.get('message_ids'))
-async def msgNotify(id=None,text='Нет',times=2):
-    msgId = await app.send_message(chat_id=id,text=f"{str(text)} \n(удаление через {times} сек.)",disable_web_page_preview=True)
-    scheduler.add_job(timeJob, trigger='date',run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
-                      args=({'id': msgId.chat.id,'message_ids':msgId.id},))
-async def trafficStatistics():
-    # Периодический сбор статистики за день
-    fleet_group_info_list = await db.select("SELECT * FROM fleet_group_info")
-    for fleet_group_info in fleet_group_info_list:
-        try:
-            link_invite = await app.edit_chat_invite_link(fleet_group_info[1], fleet_group_info[2])
-            if link_invite and link_invite.is_revoked == False:
-                await db.update("UPDATE fleet_group_info SET invite_link=?,input=? WHERE id=?",
-                          (link_invite.invite_link, link_invite.member_count or 0, fleet_group_info[0]))
-                print(fleet_group_info[1],link_invite.member_count or 0)
-        except RPCError as e:
-            print('Ошибка редактирования ссылки', e)
-    group_list = await db.select("SELECT * FROM group_list WHERE state=2")
-    if group_list:
-        for group in group_list:
-            ContS = await db.select("SELECT (SELECT SUM(input) FROM fleet_group_info WHERE group_id=?) AS out_count, "
-                              "(SELECT SUM(input) FROM fleet_group_info WHERE link_group=?) AS input_count",
-                              (group[1], group[1]))
-            print(ContS)
-            await db.update("UPDATE group_list SET out_fan=?,input_fan=? WHERE id=?",
-                                   (ContS[0][0], ContS[0][1], group[0]))
-
-# Проверка сторонних ботов
-async def examineOpponent(chatId):
     try:
-        member = await app.get_chat_member(chatId, "hutui1bot")
-        if member.status.name == "ADMINISTRATOR":
-            return True
-    except RPCError as e:
-        return False
-async def requestFleetGroupInfo(group_id,link_group):
-    # Чтение связанной пригласительной ссылки или создание при отсутствии
-    while True:
-        fleet_group_info = await db.select("SELECT * FROM fleet_group_info WHERE group_id=? AND link_group=? ",(group_id, link_group))
-        if fleet_group_info:
-            return fleet_group_info[0][2]
-        else:
-            try:
-                # print('Создание новой ссылки')
-                link = await app.create_chat_invite_link(group_id)
-                await db.insert("INSERT INTO fleet_group_info (group_id,invite_link,link_group) VALUES(?,?,?)",
-                          (group_id, link.invite_link, link_group))
-            except RPCError as e:
-                # print('Не удалось создать ссылку, возможно нет прав',e)
-                return False
-async def marshalling(group_list=None,group_chat=None,fleet=None):
-        new_car_list,index =[],1
-        new_car_list.append(f"**⛩️[{fleet[1]}|Альянс ВП](https://t.me/{config.get('botUserName')}/)⛩️**\n\n")
-        for group in group_list:
-            if group[0]!=group_chat[0]:
-                link_group =await requestFleetGroupInfo(group_id=group[1],link_group=group_chat[1])
-                if link_group:
-                    new_car_list.append(f"**{index}: [{await truncate_string(group[3],16)}]({link_group}) \n**")
-                    index += 1
-                else:
-                    print('Ошибка ссылки')
-                    continue
-            else:
-                continue
-        new_car_list.append(f"**\nAD:[Как пользоваться ботом ВП?](https://t.me/hufen/3)**")
-        new_car_list.append(f"**\nЧат взаимопиара: @{config.get('publicGroup')}**")
-        return new_car_list
-async def convoyDriving():
-    fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1 ")
-    print('Подборка',fleet_list)
-    if fleet_list:
-        for fleet in fleet_list:
-            group_list = await db.select("SELECT * FROM group_list WHERE fleet_list=? AND state=2",(fleet[0],))
-            print('Группы',group_list)
-            if group_list:
-                await db.update("UPDATE fleet_list SET count=? WHERE id=?", (len(group_list), fleet[0]))
-                for group in group_list:
-                    Permission = await HavePermission(chatId=group[1], typeG=group[4])
-                    if Permission == 1:
-                        print('У бота нет прав',group[3])
-                        await db.update("UPDATE group_list SET state=0,label='Проверка рассылки: у бота отозваны права' WHERE id=?", (group[0],))
+        msg_ids = arr.get('message_ids')
+        if isinstance(msg_ids, int):
+            msg_ids = [msg_ids]
+        await bot.delete_messages(arr.get('id'), message_ids=msg_ids)
+    except TelegramAPIError as e:
+        logging.debug(f"Ошибка удаления сообщения: {e}")
 
-                        continue
-                    elif Permission == 2:
-                        print('Бот не состоит в группе',group[3])
-                        await db.update("UPDATE group_list SET state=0,label='Проверка рассылки: бот не в группе' WHERE id=?", (group[0],))
-                        continue
-                    getMsg = {}
-                    if group[9] is not None:
-                        getMsg = await app.get_messages(chat_id=group[1], message_ids=int(group[9]))
-                    if not (getMsg=={} or hasattr(getMsg, 'forward_from_chat')):
-                        print("Предыдущее отправленное сообщение не обнаружено")
-                        await db.update("UPDATE group_list SET state=0,label='Проверка рассылки: предыдущее сообщение не найдено' WHERE id=?", (text_list[0],))
-                    text_list = await marshalling(group_list=group_list,group_chat=group,fleet=fleet)
-                    # print('Сформированный текст',text_list)
-                    if len(text_list)>2:
-                        keyboard = [[InlineKeyboardButton("➕ Участвовать в ВП", url=f"https://t.me/{config['botUserName']}")]]
-                        msg = await app.send_message(chat_id=group[1], text=''.join(text_list),
-                                                     reply_markup=InlineKeyboardMarkup(keyboard),
-                                                     disable_web_page_preview=True)
-                        if msg.id:
-                            await db.update("UPDATE group_list SET msg_id=? WHERE id=?", (msg.id, group[0]))
-                            try:
-                                if group[9] is not None:
-                                    await app.delete_messages(chat_id=group[1], message_ids=int(group[9]))
-                            except RPCError as e:
-                                print('Не удалось удалить предыдущее сообщение')
-                        else:
-                            print('Ошибка отправки')
+
+async def msgNotify(id=None, text='Нет', times=2):
+    msgId = await bot.send_message(
+        chat_id=to_peer_id(id),
+        text=f"{esc(text)}\n(удаление через {times} сек.)",
+        link_preview_options=LinkPreviewOptions(is_disabled=True),
+    )
+    scheduler.add_job(
+        timeJob,
+        trigger='date',
+        run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
+        args=({'id': msgId.chat.id, 'message_ids': [msgId.message_id]},),
+    )

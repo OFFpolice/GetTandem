@@ -1,76 +1,109 @@
 import logging
-
 import emoji
 from config import *
 from data.data import *
+
+
+def to_peer_id(val):
+    if val is None:
+        return None
+    s = str(val).strip()
+    if s.lstrip('-').isdigit():
+        return int(s)
+    return s
+
+
+def safe_int(val, default=0):
+    try:
+        return int(val)
+    except (TypeError, ValueError):
+        return default
+
+
+def format_tg_url(val):
+    s = str(val or '').strip()
+    if s.startswith('http://') or s.startswith('https://'):
+        return s
+    return f"https://t.me/{s.lstrip('@')}"
+
+
+def esc(val):
+    return html.escape(str(val if val is not None else ''))
+
+
+def html_link(title, url):
+    u = str(url or '').strip()
+    t = esc(title)
+    if u.startswith('http://') or u.startswith('https://'):
+        return f'<a href="{html.escape(u, quote=True)}">{t}</a>'
+    return t
+
+
 class Router:
     def __init__(self):
         self.routes = []
+
     def add_route(self, path_pattern, handler_class, handler_method):
-        # Преобразование шаблона пути в регулярное выражение и извлечение имён параметров
         param_pattern = re.compile(r'<(\w+)>')
+        param_names = param_pattern.findall(path_pattern)
         path_pattern = param_pattern.sub(r'(?P<\1>[^/]+)', path_pattern)
         path_regex = re.compile(f"^{path_pattern}$")
-        param_names = param_pattern.findall(path_pattern)
-        # Сохранение правила маршрута в виде кортежа
         self.routes.append((path_regex, param_names, handler_class, handler_method))
+
     async def route(self, url, *args, **kwargs):
         parsed_url = urlparse(url)
         path = parsed_url.path
         query_params = parse_qs(parsed_url.query)
-        # Перебор всех правил маршрутизации для поиска совпадения
         for path_regex, param_names, handler_class, handler_method in self.routes:
             match = path_regex.match(path)
             if not match:
                 continue
-            # Сохранение параметров пути в query_params
             for param_name in param_names:
                 query_params[param_name] = match.group(param_name)
-            # Создание экземпляра обработчика и вызов метода с параметрами запроса и пути
             try:
                 handler = handler_class(*args, **kwargs)
                 return await getattr(handler, handler_method)(**query_params)
-            except (RPCError,Exception) as e:
+            except (TelegramAPIError, Exception) as e:
                 raise ValueError(f"Ошибка выполнения метода маршрута {handler_method}: {e}")
         raise ValueError("В разработке — страница не найдена")
+
 
 class RestrictAccess:
     # Контроль доступа
     def __init__(self, Msg: Message = None):
         self.msg = Msg
+
     async def limit_check(self):
-        # Проверка превышения частоты запросов пользователем
-        msg=self.msg
+        msg = self.msg
+        if not msg or not msg.chat:
+            return True
         try:
             count = redis_client.get(f"restrict{msg.chat.id}")
-            print(count)
-            if count is None or int(count)<int(bot_config['restrict_limit']):
+            if count is None or int(count) < int(bot_config['restrict_limit']):
                 redis_client.incr(f"restrict{msg.chat.id}")
                 if count is None:
                     redis_client.expire(f"restrict{msg.chat.id}", 60)
                 return True
             else:
-                if int(count)==int(bot_config['restrict_limit']):
+                if int(count) == int(bot_config['restrict_limit']):
                     redis_client.incr(f"restrict{msg.chat.id}")
-                    redis_client.expire(f"restrict{msg.chat.id}", 60*10)
-                    await msg.reply_text('Слишком частые запросы, доступ ограничен на 10 мин.')
+                    redis_client.expire(f"restrict{msg.chat.id}", 60 * 10)
+                    await msg.answer('Слишком частые запросы, доступ ограничен на 10 мин.')
                 return False
         except Exception as e:
             logging.error(f"Ошибка ограничения доступа: {e}")
             return False
 
+
 class UserAuth:
     # Аутентификация пользователя
     def __init__(self, Msg: Message = None):
         self.msg = Msg
-    async def auth(self,FromUser=None):
-        '''
-        Система проверки пользователя: поиск в redis; если найден — проверка прав,
-        если нет — чтение из БД, при отсутствии в БД создаётся новый пользователь
-        :param message:
-        :return:
-        '''
-        msg =self.msg
+
+    async def auth(self, FromUser=None):
+        msg = self.msg
+        if not FromUser:
+            return False
         try:
             name = f"user{FromUser.id}"
             redis_client.delete(name)
@@ -80,190 +113,312 @@ class UserAuth:
             else:
                 dbUser = ChatUser(Msg=msg)
                 user = await dbUser.get_or_create(FromUser)
-                redis_client.set(name, json.dumps(user,default=str),ex=600)
+                redis_client.set(name, json.dumps(user, default=str), ex=600)
+            if not user:
+                if msg:
+                    await msg.answer("Ошибка доступа к аккаунту")
+                return False
             if user[4] == 1:
-                await msg.reply_text("Аккаунт заблокирован администратором")
+                if msg:
+                    await msg.answer("Аккаунт заблокирован администратором")
                 return False
             return user
         except Exception as e:
-            logging.error(f"Ошибка доступа к аккаунту {e}")
-            await msg.reply_text("Ошибка доступа к аккаунту")
+            logging.error(f"Ошибка доступа к аккаунту: {e}")
+            if msg:
+                await msg.answer("Ошибка доступа к аккаунту")
             return False
+
 
 class Var:
     def __init__(self, Msg: Message = None):
         self.msg = Msg
-    def write(self,value=None):
-        msg=self.msg
-        if value:
+
+    def write(self, value=None):
+        msg = self.msg
+        if value and msg:
             try:
-                name=f"var{msg.chat.id}"
-                redis_client.set(name,json.dumps(value,default=str),ex=60*2)
+                name = f"var{msg.chat.id}"
+                redis_client.set(name, json.dumps(value, default=str), ex=60 * 2)
                 return True
             except Exception as e:
-                print(e)
+                logging.error(f"Ошибка записи в Redis: {e}")
         return False
+
 
 async def truncate_string(string, length):
     '''Обрезка заголовка'''
     pattern = r":[^:]+:"
-    newStr = re.sub(pattern, "", emoji.demojize(string))
+    newStr = re.sub(pattern, "", emoji.demojize(string or ""))
     if len(newStr) > length:
         return newStr[:length] + ".."
     else:
         return newStr
 
-async def isPrivileges(chatId,typeG):
-    # Проверка прав
+
+async def isPrivileges(chatId, typeG):
+    # Проверка прав бота в канале
     try:
-        member = await app.get_chat_member(chatId, "me")
-        if member.privileges:
-            privileges = member.privileges
-            if typeG == 'CHANNEL':
-                if privileges.can_delete_messages and privileges.can_post_messages and privileges.can_edit_messages and privileges.can_invite_users:
+        member = await bot.get_chat_member(to_peer_id(chatId), bot.id)
+        if isinstance(member, ChatMemberOwner):
+            return 0
+        if isinstance(member, ChatMemberAdministrator):
+            if str(typeG).upper() == 'CHANNEL':
+                if (
+                    member.can_delete_messages
+                    and member.can_post_messages
+                    and member.can_edit_messages
+                    and member.can_invite_users
+                ):
                     return 0
             else:
-                if privileges.can_delete_messages and privileges.can_invite_users:
+                if member.can_delete_messages and member.can_invite_users:
                     return 0
         return 1
-    except (FloodWait,BadRequest,ChannelPrivate) as e:
+    except TelegramAPIError:
         return 2
+
 
 async def get_config():
     try:
-        configData=ConfigData()
+        configData = ConfigData()
         configList = await configData.get_config_list()
         if configList:
-            bot_config["rejectText"]=[]
+            bot_config["rejectText"] = []
             for config in configList:
-                if config[1]=="rejectText":
+                if config[1] == "rejectText":
                     bot_config["rejectText"].append(config[2])
                 else:
-                    bot_config[config[1]]=config[2]
+                    bot_config[config[1]] = config[2]
         return bot_config
     except Exception as e:
         logging.error(f'Ошибка чтения конфигурации: {e}')
+        return bot_config
+
 
 async def timeJob(arr):
-    await app.delete_messages(arr.get('id'), message_ids=arr.get('message_ids'))
-async def msgNotify(msg:Message,text='Нет',times=2):
-    msgId = await msg.reply_text(text=f"{str(text)} \n(удаление через {times} сек.)")
-    scheduler.add_job(timeJob, trigger='date',run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
-                      args=({'id': msgId.chat.id,'message_ids':msgId.id},))
+    try:
+        msg_ids = arr.get('message_ids')
+        if isinstance(msg_ids, int):
+            msg_ids = [msg_ids]
+        await bot.delete_messages(chat_id=arr.get('id'), message_ids=msg_ids)
+    except TelegramAPIError as e:
+        logging.debug(f"Ошибка удаления временного сообщения: {e}")
 
-async def isBotBlacklist(Client:Client,group):
-    list = await BotBlacklistDate().get_bot_blacklist_list()
+
+async def msgNotify(msg: Message, text='Нет', times=2):
+    msgId = await msg.answer(text=f"{esc(text)}\n(удаление через {times} сек.)")
+    scheduler.add_job(
+        timeJob,
+        trigger='date',
+        run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
+        args=({'id': msgId.chat.id, 'message_ids': [msgId.message_id]},),
+    )
+
+
+async def isBotBlacklist(Client: Bot, group):
+    bl_rows = await BotBlacklistDate().get_bot_blacklist_list()
+    if not bl_rows:
+        return []
+    bl_names = {
+        str(row[1] or '').strip().lstrip('@').lower()
+        for row in bl_rows
+        if row[1]
+    }
+    if not bl_names:
+        return []
     isBot = []
-    for bot_name in list:
-        try:
-            member = await Client.get_chat_member(group, bot_name[1])
-            if member.status.name=="ADMINISTRATOR":
-                isBot.append([member.user.first_name,member.user.username])
+    peer_id = to_peer_id(group)
+    try:
+        admins = await Client.get_chat_administrators(peer_id)
+        for admin in admins:
+            uname = (admin.user.username or '').strip().lstrip('@').lower()
+            if uname and uname in bl_names:
+                isBot.append([admin.user.first_name or uname, admin.user.username])
                 break
-        except RPCError as e:
-            # Бот не состоит в группе/канале
-            pass
+    except TelegramAPIError as e:
+        logging.debug(f"Не удалось получить список администраторов канала {peer_id}: {e}")
     return isBot
 
-async def send_msg(chat_id,text):
+
+async def send_msg(chat_id, text):
     try:
-        await app.send_message(chat_id=int(chat_id), text=text)
-    except RPCError as e:
-        logging.error('Ошибка отправки сообщения:',chat_id,'- Ошибка:',e)
+        await bot.send_message(
+            chat_id=to_peer_id(chat_id),
+            text=text,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
+        )
+    except TelegramAPIError as e:
+        logging.error(f'Ошибка отправки сообщения: {chat_id} - Ошибка: {e}')
+
+
+async def notify_admins(bot_client: Bot, text: str, reply_markup=None):
+    notify_type = safe_int(bot_config.get("notifyType"), 1)
+    admin_group = safe_int(bot_config.get("adminGroup"), 0)
+    if notify_type == 0 and abs(admin_group) > 100:
+        try:
+            await bot_client.send_message(
+                chat_id=admin_group,
+                text=text,
+                reply_markup=reply_markup,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
+            )
+            return True
+        except TelegramAPIError as e:
+            logging.warning(f"Ошибка отправки уведомления в adminGroup ({admin_group}), отправка админам в ЛС: {e}")
+    adminList = await ChannelFleetList().get_admini_list()
+    sent = False
+    for admin in adminList:
+        try:
+            await bot_client.send_message(
+                chat_id=to_peer_id(admin[1]),
+                text=text,
+                reply_markup=reply_markup,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
+            )
+            sent = True
+        except TelegramAPIError as e:
+            logging.warning(f"Ошибка отправки уведомления администратору {admin[1]}: {e}")
+    return sent
+
+
 async def convoyDriving():
     fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1")
-    print('Запуск рассылки')
+    logging.info('Запуск рассылки')
     if fleet_list:
+        vp_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName'))),
+                InlineKeyboardButton(text="📣 Доска объявлений", url="https://t.me/jindun"),
+            ]
+        ])
         for fleet in fleet_list:
-            print('Подборка для рассылки',fleet)
-            group_list = await db.select("SELECT * FROM group_list WHERE fleet_list=? AND state=2", (fleet[0],))
-            print('Чатов в подборке:', len(group_list))
-            if group_list and len(group_list)>=1:
+            group_list = await db.select(
+                "SELECT * FROM group_list WHERE fleet_list=? AND type='CHANNEL' AND state=2",
+                (fleet[0],),
+            )
+            if group_list and len(group_list) >= 1:
                 for group in group_list:
                     user = await db.select("SELECT * FROM chat_user WHERE id=?", (group[12],))
                     if not user:
                         continue
-                    isPrivi = await isPrivileges(chatId=group[1], typeG=group[4])
+                    peer_id = to_peer_id(group[1])
+                    isPrivi = await isPrivileges(chatId=peer_id, typeG=group[4])
                     if isPrivi == 1:
-                        print('Проверка рассылки: у бота отозваны права-',group[3])
                         await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
-                        text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
-                               f"у бота недостаточно прав, чат/канал будет снят с подборки, проверьте"
+                        text = (
+                            f"Проверка рассылки: в «{html_link(group[3], group[6])}» "
+                            f"у бота недостаточно прав, канал будет снят с подборки, проверьте"
+                        )
                         await send_msg(chat_id=user[0][1], text=text)
                         continue
                     elif isPrivi == 2:
-                        print('Проверка рассылки: бот не в чате-',group[3])
                         await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
-                        text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
-                               f"бот не обнаружен, чат/канал будет снят с подборки, проверьте"
+                        text = (
+                            f"Проверка рассылки: в «{html_link(group[3], group[6])}» "
+                            f"бот не обнаружен, канал будет снят с подборки, проверьте"
+                        )
                         await send_msg(chat_id=user[0][1], text=text)
                         continue
-                    if group[7] !=0:
-                        getMsg = await app.get_messages(chat_id=group[1], message_ids=int(group[7]))
-                        if not getMsg.text:
+                    if group[7] and int(group[7]) != 0:
+                        msg_exists = True
+                        try:
+                            await bot.edit_message_reply_markup(
+                                chat_id=peer_id,
+                                message_id=int(group[7]),
+                                reply_markup=vp_keyboard,
+                            )
+                        except TelegramBadRequest as e:
+                            err_text = str(e).lower()
+                            if "not modified" in err_text:
+                                msg_exists = True
+                            elif "not found" in err_text or "message_id_invalid" in err_text:
+                                msg_exists = False
+                        except TelegramAPIError:
+                            msg_exists = True
+                        if not msg_exists:
                             await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
-                            text = f"Проверка рассылки: в «[{group[3]}]({group[6]})» " \
-                                   f"не найдено предыдущее сообщение, чат/канал снят с подборки"
+                            text = (
+                                f"Проверка рассылки: в «{html_link(group[3], group[6])}» "
+                                f"не найдено предыдущее сообщение, канал снят с подборки"
+                            )
                             await send_msg(chat_id=user[0][1], text=text)
                             continue
-                    text_list = await marshalling(group_chat=group,fleet=fleet)
-                    print('Сформированный список',text_list)
-                    if len(text_list)>2:
-                        keyboard = [
-                            [
-                                InlineKeyboardButton("➕ Участвовать в ВП", url=f"https://t.me/{bot_config.get('botUserName').replace('@', '')}"),
-                                InlineKeyboardButton("📣 Доска объявлений", url=f"https://t.me/jindun")
-                            ]
-                        ]
-                        msg = await app.send_message(chat_id=group[1], text=''.join(text_list),
-                                                     reply_markup=InlineKeyboardMarkup(keyboard),
-                                                     disable_web_page_preview=True, disable_notification=True)
-                        if msg.id:
-                            await db.update("UPDATE group_list SET msg_id=? WHERE group_id=?", (msg.id, str(group[1])))
+                    text_list = await marshalling(group_chat=group, fleet=fleet)
+                    if len(text_list) > 2:
+                        try:
+                            msg = await bot.send_message(
+                                chat_id=peer_id,
+                                text=''.join(text_list),
+                                reply_markup=vp_keyboard,
+                                link_preview_options=LinkPreviewOptions(is_disabled=True),
+                                disable_notification=True,
+                            )
+                        except TelegramAPIError as e:
+                            logging.error(f"Ошибка отправки подборки в канал {group[1]}: {e}")
+                            continue
+                        if msg and msg.message_id:
+                            await db.update(
+                                "UPDATE group_list SET msg_id=? WHERE group_id=?",
+                                (msg.message_id, str(group[1])),
+                            )
                             try:
-                                if group[7] !=0:
-                                    await app.delete_messages(chat_id=group[1], message_ids=int(group[7]))
-                            except RPCError as e:
-                                print('Ошибка удаления предыдущего сообщения-',group[2])
+                                if group[7] and int(group[7]) != 0:
+                                    await bot.delete_message(chat_id=peer_id, message_id=int(group[7]))
+                            except TelegramAPIError as e:
+                                logging.warning(f"Ошибка удаления предыдущего сообщения {group[2]}: {e}")
+
+
 async def marshalling(group_chat=None, fleet=None):
-        new_car_list, index = [], 1
-        new_car_list.append(f"**⛩️[{fleet[1]}|{bot_config['botName']}](https://t.me/{bot_config.get('botUserName').replace('@', '')}/)⛩️**\n")
-        advertising_list = await AdvertisingData().get_advertising_list()
-        if len(advertising_list) >= 1:
-            new_car_list.append(f"**AD:[{advertising_list[0][1]}]({advertising_list[0][2]})**\n\n")
-        group_list = await db.select("SELECT * FROM group_list WHERE fleet_list=? AND state=2", (fleet[0],))
-        for group in group_list:
-            if group[0] != group_chat[0]:
-                try:
-                    link_group = await app.edit_chat_invite_link(group[1],group[6])
-                    print(link_group.invite_link)
-                    if link_group and link_group.is_revoked==False:
-                        new_car_list.append(
-                            f"{index}: [{await truncate_string(group[3], 20)}]({link_group.invite_link}) \n")
+    new_car_list, index = [], 1
+    header_link = html_link(f"{fleet[1]}|{bot_config.get('botName', '')}", format_tg_url(bot_config.get('botUserName')))
+    new_car_list.append(f"<b>⛩️{header_link}⛩️</b>\n")
+    advertising_list = await AdvertisingData().get_advertising_list()
+    if len(advertising_list) >= 1:
+        new_car_list.append(f"<b>AD:{html_link(advertising_list[0][1], advertising_list[0][2])}</b>\n\n")
+    group_list = await db.select(
+        "SELECT * FROM group_list WHERE fleet_list=? AND type='CHANNEL' AND state=2",
+        (fleet[0],),
+    )
+    for group in group_list:
+        if group[0] != group_chat[0]:
+            invite_url = str(group[6] or '').strip()
+            try:
+                if "/+" in invite_url or "joinchat/" in invite_url:
+                    link_group = await bot.edit_chat_invite_link(to_peer_id(group[1]), invite_url)
+                    if link_group and not link_group.is_revoked:
+                        short_name = await truncate_string(group[3], 20)
+                        new_car_list.append(f"{index}: {html_link(short_name, link_group.invite_link)} \n")
                         index += 1
                     else:
                         await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
-                        print('Ссылка удалена')
                         continue
-                except RPCError as e:
-                    print('Ошибка редактирования ссылки',e)
-                    await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
-                    continue
-            else:
+                else:
+                    link_group = await bot.create_chat_invite_link(to_peer_id(group[1]))
+                    await db.update("UPDATE group_list SET url=? WHERE id=?", (link_group.invite_link, group[0]))
+                    short_name = await truncate_string(group[3], 20)
+                    new_car_list.append(f"{index}: {html_link(short_name, link_group.invite_link)} \n")
+                    index += 1
+            except TelegramAPIError as e:
+                logging.warning(f"Ошибка проверки ссылки {group[1]}: {e}")
+                await db.update("UPDATE group_list SET state=0 WHERE id=?", (group[0],))
                 continue
-        try:
-            link_group = await app.edit_chat_invite_link(int(group_chat[1]), group_chat[6])
-            print(link_group.member_count)
-            if link_group and link_group.is_revoked == False:
-                await db.update("UPDATE group_list SET input_fan=? WHERE id=?",
-                              (link_group.member_count or 0, group_chat[0]))
-        except RPCError as e:
-            print('Ошибка обновления числа вступивших по ссылке', e)
-        if len(advertising_list) >=2:
-            new_car_list.append(f"\n**AD:[{advertising_list[1][1]}]({advertising_list[1][2]})**")
-        if len(advertising_list) >= 3:
-            new_car_list.append(f"\n**AD:[{advertising_list[2][1]}]({advertising_list[2][2]})**")
-        new_car_list.append(f"**\nЧат взаимопиара: {bot_config.get('publicGroup')}**")
-        return new_car_list
-
-
+    try:
+        self_url = str(group_chat[6] or '').strip()
+        if "/+" in self_url or "joinchat/" in self_url:
+            link_group = await bot.edit_chat_invite_link(to_peer_id(group_chat[1]), self_url)
+            if link_group and not link_group.is_revoked and link_group.member_count is not None:
+                await db.update(
+                    "UPDATE group_list SET input_fan=? WHERE id=?",
+                    (link_group.member_count or 0, group_chat[0]),
+                )
+    except TelegramAPIError as e:
+        logging.debug(f"Ошибка обновления числа вступивших по ссылке: {e}")
+    if index <= 1:
+        return []
+    if len(advertising_list) >= 2:
+        new_car_list.append(f"\n<b>AD:{html_link(advertising_list[1][1], advertising_list[1][2])}</b>")
+    if len(advertising_list) >= 3:
+        new_car_list.append(f"\n<b>AD:{html_link(advertising_list[2][1], advertising_list[2][2])}</b>")
+    new_car_list.append(f"\n<b>Чат взаимопиара: {esc(bot_config.get('publicGroup'))}</b>")
+    return new_car_list

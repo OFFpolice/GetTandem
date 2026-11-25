@@ -88,20 +88,27 @@ class Card:
                         await conn.executemany(
                             "INSERT INTO config (name, comm) VALUES (?, ?)",
                             [
-                                ('botName', 'Бот взаимопиара 1'),
-                                ('botUserName', '@FlashCloudBot'),
+                                ('botName', 'GetTandem'),
+                                ('botUserName', '@GetTandemBot'),
                                 ('indexTxt', 'Добро пожаловать в бот взаимопиара'),
                                 ('adminGroup', '1'),
                                 ('publicGroup', '@sepigzs'),
                                 ('msgGroup', '-'),
                                 ('video', ''),
                                 ('restrict_limit', '30'),
-                                ('notifyType', '0'),
+                                ('notifyType', '1'),
                                 ('rejectText', 'В этой подборке уже нет мест, выберите другую'),
                                 ('rejectText', 'Не соответствует тематике'),
                                 ('rejectText', 'Низкое качество контента'),
                                 ('rejectText', 'Недостаточно просмотров'),
                             ],
+                        )
+                async with conn.execute("SELECT COUNT(*) FROM chat_user WHERE chat_id=?", ("1741564693",)) as cursor:
+                    u_row = await cursor.fetchone()
+                    if u_row and u_row[0] == 0:
+                        await conn.execute(
+                            "INSERT INTO chat_user (chat_id, username, full_name, state, admin) VALUES (?, ?, ?, ?, ?)",
+                            ("1741564693", "OFFpolice", "OFFpolice", 0, 2),
                         )
                 await conn.commit()
         except Exception as err:
@@ -294,12 +301,17 @@ class CarData:
         data = await db.update("UPDATE fleet_list SET state=? WHERE id=?", (text, id))
         return data
 
-    async def put_car_pass_review(self, group, state, label, url=None):
-        group_d = False
-        if url:
-            group_d = await db.update("UPDATE group_list SET state=?,url=?,msg_id=0 WHERE id=?", (state, url, group[0]))
-        else:
-            group_d = await db.update("UPDATE group_list SET state=?,msg_id=0 WHERE id=?", (state, group[0]))
+    async def put_car_pass_review(self, group, state, label, url=None, fleet_id=None):
+        sets = ["state=?", "msg_id=0"]
+        params = [state]
+        if url is not None:
+            sets.append("url=?")
+            params.append(url)
+        if fleet_id is not None:
+            sets.append("fleet_list=?")
+            params.append(fleet_id)
+        params.append(group[0])
+        group_d = await db.update(f"UPDATE group_list SET {', '.join(sets)} WHERE id=?", tuple(params))
         if group_d:
             await self.post_notify_msg(group=group, label=label)
             return True
@@ -337,18 +349,18 @@ class CarData:
 
 
 class GroupData:
-    # Данные групп и каналов (Group) для панели администратора
+    # Данные каналов (Group) для панели администратора
     async def get_group_list(self, **kwargs):
         LIMIT, OFFSET = kwargs.get('LIMIT'), kwargs.get('OFFSET')
         search = kwargs.get('search')
         if search:
             search_val = search[0] if isinstance(search, list) else search
             data = await db.select(
-                "SELECT * FROM group_list WHERE title LIKE ? ORDER BY id LIMIT ? OFFSET ?",
+                "SELECT * FROM group_list WHERE type='CHANNEL' AND title LIKE ? ORDER BY id LIMIT ? OFFSET ?",
                 (f"%{search_val}%", LIMIT, OFFSET),
             )
         else:
-            data = await db.select("SELECT * FROM group_list ORDER BY id LIMIT ? OFFSET ?", (LIMIT, OFFSET))
+            data = await db.select("SELECT * FROM group_list WHERE type='CHANNEL' ORDER BY id LIMIT ? OFFSET ?", (LIMIT, OFFSET))
         if data:
             return data
         return []
@@ -396,7 +408,7 @@ class ChannelFleetList:
 
     async def get_fleet(self, **kwargs):
         LIMIT, OFFSET = kwargs.get('LIMIT'), kwargs.get('OFFSET')
-        count = await db.select("SELECT COUNT(*) FROM fleet_list WHERE fleet_type = 0")
+        count = await db.select("SELECT COUNT(*) FROM fleet_list WHERE fleet_type = 0 AND state=1")
         data = await db.select(
             "SELECT fleet_list.*, COUNT(group_list.id) AS group_count FROM fleet_list "
             "LEFT JOIN group_list ON fleet_list.id = group_list.fleet_list AND group_list.state=2 "
@@ -432,9 +444,13 @@ class ChannelFleetList:
         return []
 
     async def get_user_group_list(self, id, member):
+        try:
+            min_member = int(member)
+        except (TypeError, ValueError):
+            min_member = 0
         my_group = await db.select(
             "SELECT * FROM group_list WHERE chat_id=? AND type=? AND total_people>=?",
-            (id, "CHANNEL", member),
+            (id, "CHANNEL", min_member),
         )
         if my_group:
             return my_group
