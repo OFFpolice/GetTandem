@@ -29,33 +29,9 @@ async def admin_config_reply_input(message: Message, bot: Bot):
         config = ConfigData()
         admin = Admin(Client=bot, Msg=message)
         msg_id = _collect_msg_ids(message)
-        if not message.text and "Загрузите видео-презентацию" not in reply_text[0]:
+        if not message.text:
             return await msgNotify(msg=message, text='Пожалуйста, отправьте текстовое сообщение')
-        if 'Введите название бота' in reply_text[0]:
-            if await config.put_config(comm=message.text, name='botName'):
-                await get_config()
-                await msgNotify(msg=message, text='Название бота успешно изменено')
-                await _safe_delete(bot, message.chat.id, msg_id)
-            else:
-                await msgNotify(msg=message, text='Не удалось изменить название бота')
-            await admin.config()
-        elif "Введите юзернейм бота" in reply_text[0]:
-            if await config.put_config(comm=message.text, name='botUserName'):
-                await get_config()
-                await msgNotify(msg=message, text='Юзернейм бота успешно изменён')
-                await _safe_delete(bot, message.chat.id, msg_id)
-            else:
-                await msgNotify(msg=message, text='Не удалось изменить юзернейм бота')
-            await admin.config()
-        elif "Введите приветственный текст" in reply_text[0]:
-            if await config.put_config(comm=message.text, name='indexTxt'):
-                await get_config()
-                await msgNotify(msg=message, text='Приветственный текст успешно изменён')
-                await _safe_delete(bot, message.chat.id, msg_id)
-            else:
-                await msgNotify(msg=message, text='Не удалось изменить приветственный текст')
-            await admin.config()
-        elif "Введите ID админ-группы" in reply_text[0]:
+        if "Введите ID админ-группы" in reply_text[0]:
             if await config.put_config(comm=message.text, name='adminGroup'):
                 await get_config()
                 await msgNotify(msg=message, text='Админ-группа успешно изменена')
@@ -81,20 +57,6 @@ async def admin_config_reply_input(message: Message, bot: Bot):
             else:
                 await msgNotify(msg=message, text='Не удалось изменить лимит запросов: введите число')
             await admin.config()
-        elif "Загрузите видео-презентацию" in reply_text[0]:
-            if message.video:
-                if await config.put_config(comm=message.video.file_id, name='video'):
-                    await get_config()
-                    await msgNotify(msg=message, text="Видео успешно загружено")
-                    if message.reply_to_message and message.reply_to_message.reply_to_message:
-                        await _safe_delete(
-                            bot,
-                            message.chat.id,
-                            [message.reply_to_message.reply_to_message.message_id],
-                        )
-                await admin.config()
-            else:
-                await msgNotify(msg=message, text="Пожалуйста, отправьте видео")
         elif "Введите причину отказа" in reply_text[0]:
             if await config.post_rejectText(text=message.text):
                 await get_config()
@@ -111,14 +73,6 @@ async def admin_config_reply_input(message: Message, bot: Bot):
             else:
                 await msgNotify(msg=message, text='Не удалось изменить причину отказа')
             await admin.reviewRejectionWords()
-        elif "Введите чат для общения" in reply_text[0]:
-            if await config.put_config(comm=message.text, name='publicGroup'):
-                await get_config()
-                await msgNotify(msg=message, text='Чат для общения успешно изменён')
-                await _safe_delete(bot, message.chat.id, msg_id)
-            else:
-                await msgNotify(msg=message, text='Не удалось изменить чат для общения')
-            await admin.config()
     else:
         await message.answer("⚠️ Недостаточно прав, требуются права администратора")
 

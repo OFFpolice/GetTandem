@@ -1,6 +1,6 @@
 import logging
-import emoji
 from config import *
+import emoji
 from data.data import *
 
 
@@ -37,6 +37,72 @@ def html_link(title, url):
     if u.startswith('http://') or u.startswith('https://'):
         return f'<a href="{html.escape(u, quote=True)}">{t}</a>'
     return t
+
+
+FALLBACK_CUSTOM_ICONS = {
+    "5258108352008823107": "📍",
+    "5257969839313526622": "⏺",
+    "5258503720928288433": "❔",
+    "6021418126061605425": "📢",
+    "5258084656674250503": "⬅️",
+    "5257963315258204021": "🏚",
+}
+
+
+async def send_inline_message(
+    client: Bot,
+    msg: Message,
+    is_query: bool,
+    text: str,
+    keyboard: list,
+    parse_mode: ParseMode = ParseMode.HTML,
+    tag: str = "sendMsg",
+):
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+    async def _send(reply_markup):
+        if is_query:
+            await client.edit_message_text(
+                chat_id=msg.chat.id,
+                message_id=msg.message_id,
+                text=text,
+                reply_markup=reply_markup,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
+                parse_mode=parse_mode,
+            )
+        else:
+            await msg.answer(
+                text=text,
+                reply_markup=reply_markup,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
+                parse_mode=parse_mode,
+            )
+
+    try:
+        await _send(markup)
+    except TelegramBadRequest as e:
+        err_msg = str(e).lower()
+        if "message is not modified" in err_msg:
+            return
+        if "emoji" in err_msg or "icon" in err_msg or "custom_emoji" in err_msg:
+            plain_rows = []
+            for row in keyboard:
+                plain_row = []
+                for btn in row:
+                    data = btn.model_dump(exclude_none=True)
+                    icon_id = data.pop("icon_custom_emoji_id", None)
+                    if icon_id and icon_id in FALLBACK_CUSTOM_ICONS:
+                        data["text"] = f"{FALLBACK_CUSTOM_ICONS[icon_id]} {data['text']}"
+                    plain_row.append(InlineKeyboardButton(**data))
+                plain_rows.append(plain_row)
+            try:
+                await _send(InlineKeyboardMarkup(inline_keyboard=plain_rows))
+                return
+            except TelegramAPIError as retry_err:
+                logging.warning(f"{tag} fallback error: {retry_err}")
+        logging.warning(f"{tag} TelegramBadRequest: {e}")
+    except TelegramAPIError as e:
+        logging.warning(f"{tag} TelegramAPIError: {e}")
 
 
 class Router:
@@ -179,6 +245,66 @@ async def isPrivileges(chatId, typeG):
         return 2
 
 
+_bot_username_cache = ""
+
+
+async def get_bot_username(client: Bot = None):
+    global _bot_username_cache
+    if _bot_username_cache:
+        return _bot_username_cache
+    c = client or bot
+    try:
+        me = await c.get_me()
+        if me and me.username:
+            _bot_username_cache = me.username.lstrip('@')
+    except TelegramAPIError as e:
+        logging.warning(f"Не удалось получить username бота: {e}")
+    return _bot_username_cache
+
+
+async def get_bot_url(client: Bot = None):
+    uname = await get_bot_username(client)
+    return f"https://t.me/{uname}" if uname else "https://t.me"
+
+
+USER_COMMANDS = [
+    BotCommand(command="start", description="Главная"),
+    BotCommand(command="help", description="Помощь"),
+]
+
+ADMIN_COMMANDS = [
+    BotCommand(command="start", description="Главная"),
+    BotCommand(command="help", description="Помощь"),
+    BotCommand(command="admin", description="Панель администратора"),
+]
+
+
+async def sync_user_commands(client: Bot, chat_id, is_admin: bool):
+    peer = to_peer_id(chat_id)
+    try:
+        if is_admin:
+            await client.set_my_commands(ADMIN_COMMANDS, scope=BotCommandScopeChat(chat_id=peer))
+        else:
+            await client.delete_my_commands(scope=BotCommandScopeChat(chat_id=peer))
+    except TelegramAPIError as e:
+        logging.debug(f"Не удалось обновить команды меню для {peer}: {e}")
+
+
+async def sync_bot_commands(client: Bot = None):
+    c = client or bot
+    ok = True
+    try:
+        await c.set_my_commands(USER_COMMANDS, scope=BotCommandScopeDefault())
+        await c.set_my_commands(USER_COMMANDS, scope=BotCommandScopeAllPrivateChats())
+    except TelegramAPIError as e:
+        ok = False
+        logging.warning(f"Не удалось установить команды бота: {e}")
+    admin_list = await ChannelFleetList().get_admini_list()
+    for adm in admin_list:
+        await sync_user_commands(c, adm[1], is_admin=True)
+    return ok
+
+
 async def get_config():
     try:
         configData = ConfigData()
@@ -188,7 +314,7 @@ async def get_config():
             for config in configList:
                 if config[1] == "rejectText":
                     bot_config["rejectText"].append(config[2])
-                else:
+                elif config[1] in bot_config:
                     bot_config[config[1]] = config[2]
         return bot_config
     except Exception as e:
@@ -286,9 +412,10 @@ async def convoyDriving():
     fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1")
     logging.info('Запуск рассылки')
     if fleet_list:
+        bot_url = await get_bot_url(bot)
         vp_keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [
-                InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName'))),
+                InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url),
                 InlineKeyboardButton(text="📣 Доска объявлений", url="https://t.me/jindun"),
             ]
         ])
@@ -371,8 +498,9 @@ async def convoyDriving():
 
 async def marshalling(group_chat=None, fleet=None):
     new_car_list, index = [], 1
-    header_link = html_link(f"{fleet[1]}|{bot_config.get('botName', '')}", format_tg_url(bot_config.get('botUserName')))
-    new_car_list.append(f"<b>⛩️{header_link}⛩️</b>\n")
+    bot_url = await get_bot_url(bot)
+    header_link = html_link(fleet[1], bot_url)
+    new_car_list.append(f"<b>⛩️ {header_link} ⛩️</b>\n")
     advertising_list = await AdvertisingData().get_advertising_list()
     if len(advertising_list) >= 1:
         new_car_list.append(f"<b>AD:{html_link(advertising_list[0][1], advertising_list[0][2])}</b>\n\n")
@@ -420,5 +548,4 @@ async def marshalling(group_chat=None, fleet=None):
         new_car_list.append(f"\n<b>AD:{html_link(advertising_list[1][1], advertising_list[1][2])}</b>")
     if len(advertising_list) >= 3:
         new_car_list.append(f"\n<b>AD:{html_link(advertising_list[2][1], advertising_list[2][2])}</b>")
-    new_car_list.append(f"\n<b>Чат взаимопиара: {esc(bot_config.get('publicGroup'))}</b>")
     return new_car_list

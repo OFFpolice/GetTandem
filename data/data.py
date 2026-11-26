@@ -1,48 +1,206 @@
-import aiosqlite
 from config import *
+import aiosqlite
+try:
+    import asyncpg
+except ImportError:
+    asyncpg = None
+
+
+_CORE_CONFIG_DEFAULTS = (
+    ('adminGroup', '1'),
+    ('msgGroup', '-'),
+    ('restrict_limit', '30'),
+    ('notifyType', '1'),
+)
+
+_DEFAULT_REJECT_TEXTS = (
+    'В этой подборке уже нет мест, выберите другую',
+    'Не соответствует тематике',
+    'Низкое качество контента',
+    'Недостаточно просмотров',
+)
+
+
+def _to_pg_query(query: str) -> str:
+    out = []
+    in_single = False
+    param_idx = 1
+    i = 0
+    n = len(query)
+    while i < n:
+        ch = query[i]
+        if ch == "'":
+            out.append(ch)
+            if in_single and i + 1 < n and query[i + 1] == "'":
+                out.append("'")
+                i += 2
+                continue
+            in_single = not in_single
+            i += 1
+            continue
+        if not in_single and ch == '?':
+            out.append(f"${param_idx}")
+            param_idx += 1
+            i += 1
+            continue
+        if not in_single and query[i:i + 6].upper() == ' LIKE ':
+            out.append(' ILIKE ')
+            i += 6
+            continue
+        out.append(ch)
+        i += 1
+    return ''.join(out)
 
 
 class Card:
-    def __init__(self, db_path='hutui.db'):
-        self.db_path = db_path
+    def __init__(self, db_path=None, database_url=None):
+        default_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'hutui.db')
+        self.db_path = db_path or default_path
+        if db_path is not None and database_url is None:
+            self.database_url = ""
+        else:
+            self.database_url = (database_url if database_url is not None else DATABASE_URL).strip()
+        self.use_postgres = bool(
+            asyncpg is not None and self.database_url.startswith(('postgres://', 'postgresql://'))
+        )
+        self._write_lock = asyncio.Lock()
+        self._pg_pool = None
+        self._pg_pool_lock = asyncio.Lock()
+
+    def _pg_dsn(self) -> str:
+        if self.database_url.startswith('postgres://'):
+            return 'postgresql://' + self.database_url[len('postgres://'):]
+        return self.database_url
+
+    async def _get_pg_pool(self):
+        if self._pg_pool is not None:
+            return self._pg_pool
+        async with self._pg_pool_lock:
+            if self._pg_pool is None:
+                self._pg_pool = await asyncpg.create_pool(
+                    dsn=self._pg_dsn(),
+                    min_size=1,
+                    max_size=10,
+                )
+        return self._pg_pool
+
+    async def close(self):
+        if self._pg_pool is not None:
+            await self._pg_pool.close()
+            self._pg_pool = None
+
+    async def _connect_sqlite(self):
+        conn = await aiosqlite.connect(self.db_path, timeout=30.0)
+        await conn.execute("PRAGMA journal_mode=DELETE;")
+        await conn.execute("PRAGMA synchronous=FULL;")
+        await conn.execute("PRAGMA busy_timeout=10000;")
+        return conn
+
+    def _coerce_pg_params(self, stmt, data):
+        args = list(data or ())
+        params = stmt.get_parameters()
+        coerced = []
+        for idx, val in enumerate(args):
+            if idx < len(params) and val is not None:
+                ptype = params[idx].name
+                if ptype in ('int2', 'int4', 'int8') and isinstance(val, str):
+                    s = val.strip()
+                    if s.lstrip('-').isdigit():
+                        val = int(s)
+                elif ptype in ('text', 'varchar', 'bpchar') and not isinstance(val, str):
+                    val = str(val)
+            coerced.append(val)
+        return coerced
+
+    async def _migrate_sqlite_to_pg(self, pg_conn):
+        if not os.path.exists(self.db_path):
+            return
+        tables = (
+            'advertising',
+            'bot_blacklist',
+            'chat_user',
+            'config',
+            'fleet_list',
+            'group_list',
+            'notify_msg',
+        )
+        total_pg = 0
+        for tbl in tables:
+            total_pg += await pg_conn.fetchval(f"SELECT COUNT(*) FROM {tbl}")
+        if total_pg > 0:
+            return
+        try:
+            async with aiosqlite.connect(self.db_path, timeout=10.0) as sq_conn:
+                for tbl in tables:
+                    async with sq_conn.execute(f"SELECT * FROM {tbl}") as cur:
+                        rows = await cur.fetchall()
+                        if not rows:
+                            continue
+                        cols = [d[0] for d in cur.description]
+                    placeholders = ', '.join(f"${i}" for i in range(1, len(cols) + 1))
+                    col_list = ', '.join(cols)
+                    insert_sql = f"INSERT INTO {tbl} ({col_list}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"
+                    for r in rows:
+                        vals = []
+                        for col_name, v in zip(cols, r):
+                            if col_name == 'creation_time' and isinstance(v, str):
+                                try:
+                                    vals.append(datetime.datetime.fromisoformat(v))
+                                except ValueError:
+                                    vals.append(None)
+                            else:
+                                vals.append(v)
+                        await pg_conn.execute(insert_sql, *vals)
+                    await pg_conn.execute(
+                        f"SELECT setval(pg_get_serial_sequence('{tbl}', 'id'), COALESCE((SELECT MAX(id) FROM {tbl}), 1), (SELECT MAX(id) FROM {tbl}) IS NOT NULL)"
+                    )
+        except Exception as err:
+            logging.warning(f"Миграция из SQLite в PostgreSQL пропущена: {err}")
 
     async def init_db(self):
+        if self.use_postgres:
+            await self._init_postgres()
+        else:
+            await self._init_sqlite()
+
+    async def _init_postgres(self):
         try:
-            async with aiosqlite.connect(self.db_path) as conn:
-                await conn.executescript(
+            pool = await self._get_pg_pool()
+            async with pool.acquire() as conn:
+                await conn.execute(
                     """
                     CREATE TABLE IF NOT EXISTS advertising (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         titel TEXT DEFAULT NULL,
                         url TEXT DEFAULT NULL,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
                     CREATE TABLE IF NOT EXISTS bot_blacklist (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         bot_name TEXT DEFAULT NULL,
                         state INTEGER DEFAULT 0,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
                     CREATE TABLE IF NOT EXISTS chat_user (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         chat_id TEXT DEFAULT NULL,
                         username TEXT DEFAULT NULL,
                         full_name TEXT DEFAULT NULL,
                         state INTEGER DEFAULT 0,
                         admin INTEGER DEFAULT 0,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
                     CREATE TABLE IF NOT EXISTS config (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         name TEXT DEFAULT NULL,
                         comm TEXT DEFAULT NULL
                     );
 
                     CREATE TABLE IF NOT EXISTS fleet_list (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         title TEXT DEFAULT NULL,
                         introduce TEXT DEFAULT NULL,
                         fleet_type INTEGER DEFAULT 0,
@@ -52,11 +210,11 @@ class Card:
                         count INTEGER DEFAULT 1,
                         mi_member INTEGER DEFAULT 1,
                         mi_read INTEGER DEFAULT 1,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
                     CREATE TABLE IF NOT EXISTS group_list (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         group_id TEXT DEFAULT NULL,
                         username TEXT DEFAULT NULL,
                         title TEXT DEFAULT NULL,
@@ -69,66 +227,213 @@ class Card:
                         state INTEGER DEFAULT 0,
                         fleet_list INTEGER DEFAULT 0,
                         chat_id INTEGER DEFAULT NULL,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         label TEXT DEFAULT NULL
                     );
 
                     CREATE TABLE IF NOT EXISTS notify_msg (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        id SERIAL PRIMARY KEY,
                         user_id INTEGER DEFAULT NULL,
                         group_id INTEGER DEFAULT NULL,
                         msg TEXT DEFAULT NULL,
-                        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                     """
                 )
-                async with conn.execute("SELECT COUNT(*) FROM config") as cursor:
-                    row = await cursor.fetchone()
-                    if row and row[0] == 0:
+                await self._migrate_sqlite_to_pg(conn)
+                await conn.execute(
+                    "DELETE FROM config WHERE name IN ('botName', 'botUserName', 'indexTxt', 'publicGroup', 'video')"
+                )
+                total_cfg = await conn.fetchval("SELECT COUNT(*) FROM config")
+                for key, default_val in _CORE_CONFIG_DEFAULTS:
+                    exists = await conn.fetchval("SELECT COUNT(*) FROM config WHERE name=$1", key)
+                    if not exists:
+                        await conn.execute(
+                            "INSERT INTO config (name, comm) VALUES ($1, $2)",
+                            key,
+                            default_val,
+                        )
+                if total_cfg == 0:
+                    for txt in _DEFAULT_REJECT_TEXTS:
+                        await conn.execute(
+                            "INSERT INTO config (name, comm) VALUES ($1, $2)",
+                            'rejectText',
+                            txt,
+                        )
+                if ADMIN_ID:
+                    u_cnt = await conn.fetchval(
+                        "SELECT COUNT(*) FROM chat_user WHERE chat_id=$1",
+                        str(ADMIN_ID),
+                    )
+                    if not u_cnt:
+                        await conn.execute(
+                            "INSERT INTO chat_user (chat_id, username, full_name, state, admin) VALUES ($1, $2, $3, $4, $5)",
+                            str(ADMIN_ID), "OFFpolice", "OFFpolice", 0, 2,
+                        )
+        except Exception as err:
+            logging.error(f"init_db(pg)-Ошибка инициализации базы данных: {err}")
+
+    async def _init_sqlite(self):
+        try:
+            async with self._write_lock:
+                db_dir = os.path.dirname(os.path.abspath(self.db_path))
+                if db_dir:
+                    os.makedirs(db_dir, exist_ok=True)
+                conn = await self._connect_sqlite()
+                try:
+                    await conn.executescript(
+                        """
+                        CREATE TABLE IF NOT EXISTS advertising (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            titel TEXT DEFAULT NULL,
+                            url TEXT DEFAULT NULL,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );
+
+                        CREATE TABLE IF NOT EXISTS bot_blacklist (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            bot_name TEXT DEFAULT NULL,
+                            state INTEGER DEFAULT 0,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );
+
+                        CREATE TABLE IF NOT EXISTS chat_user (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            chat_id TEXT DEFAULT NULL,
+                            username TEXT DEFAULT NULL,
+                            full_name TEXT DEFAULT NULL,
+                            state INTEGER DEFAULT 0,
+                            admin INTEGER DEFAULT 0,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );
+
+                        CREATE TABLE IF NOT EXISTS config (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT DEFAULT NULL,
+                            comm TEXT DEFAULT NULL
+                        );
+
+                        CREATE TABLE IF NOT EXISTS fleet_list (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            title TEXT DEFAULT NULL,
+                            introduce TEXT DEFAULT NULL,
+                            fleet_type INTEGER DEFAULT 0,
+                            state INTEGER DEFAULT 0,
+                            sign TEXT DEFAULT NULL,
+                            total INTEGER DEFAULT 20,
+                            count INTEGER DEFAULT 1,
+                            mi_member INTEGER DEFAULT 1,
+                            mi_read INTEGER DEFAULT 1,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );
+
+                        CREATE TABLE IF NOT EXISTS group_list (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            group_id TEXT DEFAULT NULL,
+                            username TEXT DEFAULT NULL,
+                            title TEXT DEFAULT NULL,
+                            type TEXT DEFAULT NULL,
+                            total_people INTEGER DEFAULT NULL,
+                            url TEXT DEFAULT NULL,
+                            msg_id INTEGER DEFAULT 0,
+                            out_fan INTEGER DEFAULT 0,
+                            input_fan INTEGER DEFAULT 0,
+                            state INTEGER DEFAULT 0,
+                            fleet_list INTEGER DEFAULT 0,
+                            chat_id INTEGER DEFAULT NULL,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            label TEXT DEFAULT NULL
+                        );
+
+                        CREATE TABLE IF NOT EXISTS notify_msg (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            user_id INTEGER DEFAULT NULL,
+                            group_id INTEGER DEFAULT NULL,
+                            msg TEXT DEFAULT NULL,
+                            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+                        );
+                        """
+                    )
+                    await conn.execute(
+                        "DELETE FROM config WHERE name IN ('botName', 'botUserName', 'indexTxt', 'publicGroup', 'video')"
+                    )
+                    async with conn.execute("SELECT COUNT(*) FROM config") as cursor:
+                        row = await cursor.fetchone()
+                        total_cfg = row[0] if row else 0
+                    for key, default_val in _CORE_CONFIG_DEFAULTS:
+                        async with conn.execute("SELECT COUNT(*) FROM config WHERE name=?", (key,)) as cursor:
+                            k_row = await cursor.fetchone()
+                            if not k_row or k_row[0] == 0:
+                                await conn.execute(
+                                    "INSERT INTO config (name, comm) VALUES (?, ?)",
+                                    (key, default_val),
+                                )
+                    if total_cfg == 0:
                         await conn.executemany(
                             "INSERT INTO config (name, comm) VALUES (?, ?)",
-                            [
-                                ('botName', 'GetTandem'),
-                                ('botUserName', '@GetTandemBot'),
-                                ('indexTxt', 'Добро пожаловать в бот взаимопиара'),
-                                ('adminGroup', '1'),
-                                ('publicGroup', '@sepigzs'),
-                                ('msgGroup', '-'),
-                                ('video', ''),
-                                ('restrict_limit', '30'),
-                                ('notifyType', '1'),
-                                ('rejectText', 'В этой подборке уже нет мест, выберите другую'),
-                                ('rejectText', 'Не соответствует тематике'),
-                                ('rejectText', 'Низкое качество контента'),
-                                ('rejectText', 'Недостаточно просмотров'),
-                            ],
+                            [('rejectText', txt) for txt in _DEFAULT_REJECT_TEXTS],
                         )
-                async with conn.execute("SELECT COUNT(*) FROM chat_user WHERE chat_id=?", ("1741564693",)) as cursor:
-                    u_row = await cursor.fetchone()
-                    if u_row and u_row[0] == 0:
-                        await conn.execute(
-                            "INSERT INTO chat_user (chat_id, username, full_name, state, admin) VALUES (?, ?, ?, ?, ?)",
-                            ("1741564693", "OFFpolice", "OFFpolice", 0, 2),
-                        )
-                await conn.commit()
+                    if ADMIN_ID:
+                        async with conn.execute("SELECT COUNT(*) FROM chat_user WHERE chat_id=?", (str(ADMIN_ID),)) as cursor:
+                            u_row = await cursor.fetchone()
+                            if not u_row or u_row[0] == 0:
+                                await conn.execute(
+                                    "INSERT INTO chat_user (chat_id, username, full_name, state, admin) VALUES (?, ?, ?, ?, ?)",
+                                    (str(ADMIN_ID), "OFFpolice", "OFFpolice", 0, 2),
+                                )
+                    await conn.commit()
+                finally:
+                    await conn.close()
         except Exception as err:
             logging.error(f"init_db-Ошибка инициализации базы данных: {err}")
 
     async def execute_query(self, query, data=None):
+        if self.use_postgres:
+            try:
+                pool = await self._get_pg_pool()
+                pg_query = _to_pg_query(query)
+                async with pool.acquire() as conn:
+                    stmt = await conn.prepare(pg_query)
+                    args = self._coerce_pg_params(stmt, data)
+                    rows = await stmt.fetch(*args)
+                    return [tuple(r.values()) for r in rows]
+            except Exception as err:
+                logging.error(f"execute_query(pg)-Ошибка выполнения запроса: {err}")
+                return []
         try:
-            async with aiosqlite.connect(self.db_path) as conn:
+            conn = await self._connect_sqlite()
+            try:
                 async with conn.execute(query, data or ()) as cursor:
                     return await cursor.fetchall()
+            finally:
+                await conn.close()
         except Exception as err:
             logging.error(f"execute_query-Ошибка выполнения запроса: {err}")
             return []
 
     async def execute_update(self, query, data=None):
+        if self.use_postgres:
+            try:
+                pool = await self._get_pg_pool()
+                pg_query = _to_pg_query(query)
+                async with self._write_lock:
+                    async with pool.acquire() as conn:
+                        stmt = await conn.prepare(pg_query)
+                        args = self._coerce_pg_params(stmt, data)
+                        await stmt.fetch(*args)
+                        return True
+            except Exception as err:
+                logging.error(f"execute_update(pg)-Ошибка выполнения обновления: {err}")
+                return False
         try:
-            async with aiosqlite.connect(self.db_path) as conn:
-                await conn.execute(query, data or ())
-                await conn.commit()
-                return True
+            async with self._write_lock:
+                conn = await self._connect_sqlite()
+                try:
+                    await conn.execute(query, data or ())
+                    await conn.commit()
+                    return True
+                finally:
+                    await conn.close()
         except Exception as err:
             logging.error(f"execute_update-Ошибка выполнения обновления: {err}")
             return False
@@ -163,9 +468,10 @@ class ChatUser:
         return []
 
     async def post(self, from_user):
-        full_name = f"{from_user.first_name or ''}{from_user.last_name or ''}"
-        aad = "INSERT INTO chat_user (chat_id,username,full_name) VALUES(?,?,?)"
-        data = (str(from_user.id), from_user.username or 'Нет', full_name)
+        full_name = f"{from_user.first_name or ''}{(' ' + from_user.last_name) if from_user.last_name else ''}".strip() or 'Пользователь'
+        is_super = 2 if ADMIN_ID and int(from_user.id) == ADMIN_ID else 0
+        aad = "INSERT INTO chat_user (chat_id,username,full_name,admin) VALUES(?,?,?,?)"
+        data = (str(from_user.id), from_user.username or 'Нет', full_name, is_super)
         if await db.insert(aad, data):
             return await self.get(from_user=from_user)
         return []
@@ -173,6 +479,22 @@ class ChatUser:
     async def get_or_create(self, from_user):
         user = await self.get(from_user=from_user)
         if user:
+            updates = []
+            params = []
+            uname = from_user.username or 'Нет'
+            full_name = f"{from_user.first_name or ''}{(' ' + from_user.last_name) if from_user.last_name else ''}".strip() or user[3] or 'Пользователь'
+            if user[2] != uname:
+                updates.append("username=?")
+                params.append(uname)
+            if user[3] != full_name:
+                updates.append("full_name=?")
+                params.append(full_name)
+            if ADMIN_ID and int(from_user.id) == ADMIN_ID and user[5] != 2:
+                updates.append("admin=2")
+            if updates:
+                params.append(str(from_user.id))
+                await db.update(f"UPDATE chat_user SET {', '.join(updates)} WHERE chat_id=?", tuple(params))
+                user = await self.get(from_user=from_user)
             return user
         else:
             return await self.post(from_user=from_user)
@@ -186,8 +508,10 @@ class ConfigData:
         return []
 
     async def put_config(self, comm, name):
-        data = await db.update("UPDATE config SET comm=? WHERE name=?", (comm, name))
-        return data
+        existing = await db.select("SELECT id FROM config WHERE name=?", (name,))
+        if existing:
+            return await db.update("UPDATE config SET comm=? WHERE name=?", (comm, name))
+        return await db.insert("INSERT INTO config (name, comm) VALUES (?, ?)", (name, comm))
 
     async def get_rejectText_list(self):
         data = await db.select("SELECT * FROM config WHERE name='rejectText'")

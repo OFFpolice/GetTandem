@@ -6,3 +6,5 @@ aiosqlite==0.20.0
 redis==4.5.4
 setuptools<81
 uvloop==0.17.0
+python-dotenv>=1.0.0
+asyncpg>=0.29.0

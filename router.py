@@ -5,6 +5,7 @@ from views.admin import *
 
 router = Router()
 router.add_route('r/index', Index, 'index')
+router.add_route('r/instruction', Index, 'instruction')
 router.add_route('r/channel', Channel, 'index')
 router.add_route('r/channel_fleet', Channel, 'fleet_info')
 router.add_route('r/channel_apply', Channel, 'add_fleet')

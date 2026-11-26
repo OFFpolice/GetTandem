@@ -10,11 +10,27 @@ async def start_handler(message: Message, bot: Bot):
     if await RestrictAccess(Msg=message).limit_check():
         user = await UserAuth(Msg=message).auth(FromUser=message.from_user)
         if user:
+            if user[5] in [1, 2]:
+                await sync_user_commands(bot, message.from_user.id, is_admin=True)
             try:
                 index = Index(Client=bot, Msg=message, Data={'user': user})
                 await index.index()
             except (TelegramAPIError, Exception) as e:
                 logging.error(f"Ошибка команды пользователя: {e}")
+
+
+async def help_handler(message: Message, bot: Bot):
+    '''Обработчик команды /help'''
+    if await RestrictAccess(Msg=message).limit_check():
+        user = await UserAuth(Msg=message).auth(FromUser=message.from_user)
+        if user:
+            if user[5] in [1, 2]:
+                await sync_user_commands(bot, message.from_user.id, is_admin=True)
+            try:
+                index = Index(Client=bot, Msg=message, Data={'user': user})
+                await index.instruction()
+            except (TelegramAPIError, Exception) as e:
+                logging.error(f"Ошибка команды /help: {e}")
 
 
 async def noop_callback_handler(query: CallbackQuery):

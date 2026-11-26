@@ -1,4 +1,31 @@
+import importlib.util
 import logging
+import subprocess
+import sys
+
+
+def _ensure_dependencies():
+    required = ("aiogram", "dotenv", "aiosqlite", "apscheduler", "emoji", "redis", "uvloop", "asyncpg")
+    if all(importlib.util.find_spec(pkg) is not None for pkg in required):
+        return
+    if importlib.util.find_spec("pip") is None:
+        import os
+        import urllib.request
+
+        tmp_pip = "/tmp/get-pip.py"
+        urllib.request.urlretrieve("https://bootstrap.pypa.io/get-pip.py", tmp_pip)
+        try:
+            subprocess.run([sys.executable, tmp_pip, "--break-system-packages"], check=True)
+        finally:
+            if os.path.exists(tmp_pip):
+                os.remove(tmp_pip)
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "--break-system-packages", "-q", "-r", "requirements.txt"],
+        check=True,
+    )
+
+
+_ensure_dependencies()
 
 from config import *
 from monitor.command import *
@@ -10,14 +37,20 @@ def register_handlers(dispatcher: Dispatcher):
     # Команда запуска или главная страница
     dispatcher.message.register(
         start_handler,
-        Command("start", "index"),
+        Command("start"),
+        F.chat.type == ChatType.PRIVATE,
+    )
+    # Команда инструкции /help
+    dispatcher.message.register(
+        help_handler,
+        Command("help"),
         F.chat.type == ChatType.PRIVATE,
     )
     # Команда вызова панели администратора
     dispatcher.message.register(
         admii_command,
         F.chat.type == ChatType.PRIVATE,
-        or_f(Command("admin"), F.text.contains("⚙Админ-панель")),
+        Command("admin"),
     )
     # Заглушка для неактивных кнопок
     dispatcher.callback_query.register(noop_callback_handler, F.data == "-")
@@ -86,12 +119,20 @@ async def main():
     logging.critical(f"Время выполнения планировщика: {schedulerObj}")
     register_handlers(dp)
     await bot.delete_webhook(drop_pending_updates=False)
-    await dp.start_polling(bot)
+    await sync_bot_commands(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        if scheduler.running:
+            scheduler.shutdown(wait=False)
+        await db.close()
+        await bot.session.close()
 
 
 if __name__ == '__main__':
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind(("127.0.0.1", 47209))
     except socket.error:
         print('Бот уже запущен')

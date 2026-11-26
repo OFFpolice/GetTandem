@@ -16,41 +16,21 @@ class Admin:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"Admin.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"Admin.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="Admin.sendMsg",
+        )
 
     async def index(self, **kwargs):
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n\n"
             "======<b>🏆 Панель управления 🏆</b>======\n\n"
-            "🌟<b>Добро пожаловать, администратор:</b>🌟\n"
+            "🌟 <b>Добро пожаловать, администратор:</b> 🌟\n"
             "  ✅ Здесь можно управлять функциями бота"
         )
         keyboard = [
@@ -74,50 +54,31 @@ class Admin:
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n\n"
             "======<b>🏆 Настройки бота 🏆</b>======\n\n"
-            "<b>🔸Инициализация меню:</b> настройка команд меню пользователя\n"
-            f"<b>🔸Название бота:</b> {esc(cfg.get('botName'))}\n"
-            f"<b>🔸Аккаунт бота:</b> {esc(cfg.get('botUserName'))}\n"
-            f"<b>🔸Приветствие:</b>\n'{esc(cfg.get('indexTxt'))}'\n"
-            f"<b>🔸Причины отказа:</b>\n{esc('|'.join(cfg.get('rejectText') or []))}\n"
-            f"<b>🔸Видео-презентация:</b> {'🟢 Загружено' if len(cfg.get('video') or '') > 20 else '🚫 Не загружено'}\n"
-            f"<b>🔸Админ-группа:</b> {esc(cfg.get('adminGroup'))}\n"
-            f"<b>🔸Группа уведомлений:</b> {esc(cfg.get('msgGroup'))}\n"
-            f"<b>🔸Чат для общения:</b> {esc(cfg.get('publicGroup'))}\n"
-            f"<b>🔸Лимит запросов:</b> {esc(cfg.get('restrict_limit'))} \n(при превышении за 60 сек. — блокировка на 10 мин.)"
+            "<b>🔸 Инициализация меню:</b> настройка команд меню пользователя\n"
+            f"<b>🔸 Причины отказа:</b>\n{esc('|'.join(cfg.get('rejectText') or []))}\n"
+            f"<b>🔸 Админ-группа:</b> {esc(cfg.get('adminGroup'))}\n"
+            f"<b>🔸 Группа уведомлений:</b> {esc(cfg.get('msgGroup'))}\n"
+            f"<b>🔸 Лимит запросов:</b> {esc(cfg.get('restrict_limit'))} \n(при превышении за 60 сек. — блокировка на 10 мин.)"
         )
         keyboard = [
             [InlineKeyboardButton(text="Инициализировать меню", callback_data="a/init_menu")],
             [
-                InlineKeyboardButton(text="Изм. название бота", callback_data="a/edit_config?k=botName"),
-                InlineKeyboardButton(text="Изм. аккаунт бота", callback_data="a/edit_config?k=botUserName"),
-            ],
-            [
-                InlineKeyboardButton(text="Изм. приветствие", callback_data="a/edit_config?k=indexTxt"),
                 InlineKeyboardButton(text="Причины отказа", callback_data="a/reject_words"),
+                InlineKeyboardButton(text="Изм. лимит запросов", callback_data="a/edit_config?k=restrict_limit"),
             ],
             [
-                InlineKeyboardButton(text="Изм. видео", callback_data="a/edit_config?k=video"),
                 InlineKeyboardButton(text="Изм. админ-группу", callback_data="a/edit_config?k=adminGroup"),
-            ],
-            [
                 InlineKeyboardButton(text="Изм. группу уведомлений", callback_data="a/edit_config?k=msgGroup"),
-                InlineKeyboardButton(text="Изм. чат общения", callback_data="a/edit_config?k=publicGroup"),
             ],
-            [InlineKeyboardButton(text="Изм. лимит запросов", callback_data="a/edit_config?k=restrict_limit")],
-            [InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin")],
+            [InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503")],
         ]
         await self.sendMsg(text=text, keyboard=keyboard)
 
     async def modifBot(self, **kwargs):
         msg = await self.retChat()
         prompts = {
-            "botName": "Введите название бота",
-            "botUserName": "Введите юзернейм бота:Пример:@xxbot",
-            "indexTxt": "Введите приветственный текст",
-            "video": "Загрузите видео-презентацию",
             "adminGroup": "Введите ID админ-группы",
             "msgGroup": "Введите ID группы уведомлений",
-            "publicGroup": "Введите чат для общения:Пример:@xxx",
             "restrict_limit": "Введите лимит запросов:Ответьте числом от 1 до 60",
             "addReject": "Введите причину отказа",
         }
@@ -129,14 +90,11 @@ class Admin:
             prompt = prompts[k]
         else:
             prompt = kwargs.get('text')[0]
-        txt = f"📲{prompt}"
+        txt = f"📲 {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def initialization(self, **kwargs):
-        initial = await self.client.set_my_commands([
-            BotCommand(command="start", description="Главная"),
-            BotCommand(command="help", description="Помощь"),
-        ])
+        initial = await sync_bot_commands(self.client)
         if initial and self.query:
             await self.query.answer(text='Меню успешно инициализировано', show_alert=True)
 
@@ -146,8 +104,8 @@ class Admin:
         text = (
             "======<b>🏆 Шаблоны причин отказа 🏆</b>======\n"
             "Быстрый выбор причины при отклонении заявки пользователя\n"
-            "Обозначения: ➕Добавить ❌Удалить 🖍Изменить\n\n"
-            "🚫<b>Список шаблонов причин отказа:</b>\n"
+            "Обозначения: ➕ Добавить ❌ Удалить 🖍 Изменить\n\n"
+            "🚫 <b>Список шаблонов причин отказа:</b>\n"
         )
         keyboard = []
         if rejectText_list:
@@ -161,10 +119,10 @@ class Admin:
         else:
             text += "Пусто, не настроено"
             keyboard.append([InlineKeyboardButton(text="Список пуст", callback_data="-")])
-        keyboard.append([InlineKeyboardButton(text="➕Добавить", callback_data="a/edit_config?k=addReject")])
+        keyboard.append([InlineKeyboardButton(text="➕ Добавить", callback_data="a/edit_config?k=addReject")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data="a/config"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+            InlineKeyboardButton(text="Назад", callback_data="a/config", icon_custom_emoji_id="5258084656674250503"),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
 
@@ -176,10 +134,10 @@ class Admin:
         if delData:
             await get_config()
             if self.query:
-                await self.query.answer(text="✅Успешно удалено", cache_time=5)
+                await self.query.answer(text="✅ Успешно удалено", cache_time=5)
             await self.reviewRejectionWords()
         else:
-            await msgNotify(msg=msg, text="❕Ошибка удаления")
+            await msgNotify(msg=msg, text="❕ Ошибка удаления")
 
 
 class Advertising:
@@ -196,35 +154,15 @@ class Advertising:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"Advertising.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"Advertising.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="Advertising.sendMsg",
+        )
 
     async def adInput(self, **kwargs):
         msg = await self.retChat()
@@ -236,7 +174,7 @@ class Advertising:
             prompt = f"Введите новую рекламу:{item_id}"
         else:
             prompt = kwargs.get('text')[0]
-        txt = f"🗞️{prompt}"
+        txt = f"🗞️ {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def index(self, **kwargs):
@@ -246,8 +184,8 @@ class Advertising:
             "======<b>🏆 Управление рекламой 🏆</b>======\n"
             "Реклама, добавляемая при рассылке подборки\n"
             "Пример добавления: Взаимопиар&amp;https://t.me/+oYUJoUkMlfphN2M1\n"
-            "Обозначения: ➕Добавить ❌Удалить 🖍Изменить\n\n"
-            "🚫<b>Список рекламы:</b>\n"
+            "Обозначения: ➕ Добавить ❌ Удалить 🖍 Изменить\n\n"
+            "🚫 <b>Список рекламы:</b>\n"
         )
         keyboard = []
         if advertising_list:
@@ -261,10 +199,10 @@ class Advertising:
         else:
             text += "Пусто, не настроено"
             keyboard.append([InlineKeyboardButton(text="Список пуст", callback_data="-")])
-        keyboard.append([InlineKeyboardButton(text="➕Добавить", callback_data="a/ad_input?k=addAd")])
+        keyboard.append([InlineKeyboardButton(text="➕ Добавить", callback_data="a/ad_input?k=addAd")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+            InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503"),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
 
@@ -275,10 +213,10 @@ class Advertising:
         delData = await AdvertisingData().del_advertising(id=item_id)
         if delData:
             if self.query:
-                await self.query.answer(text="✅Успешно удалено", cache_time=5)
+                await self.query.answer(text="✅ Успешно удалено", cache_time=5)
             await self.index()
         else:
-            await msgNotify(msg=msg, text="❕Ошибка удаления")
+            await msgNotify(msg=msg, text="❕ Ошибка удаления")
 
 
 class Car:
@@ -296,35 +234,15 @@ class Car:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"Car.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"Car.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="Car.sendMsg",
+        )
 
     async def inputBot(self, **kwargs):
         msg = await self.retChat()
@@ -339,7 +257,7 @@ class Car:
             "minRead": f"Введите мин. число просмотров:{item_id}",
         }
         prompt = prompts[k] if k and k in prompts else kwargs.get('text')[0]
-        txt = f"🚒{prompt}"
+        txt = f"🚒 {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def index(self, **kwargs):
@@ -348,16 +266,16 @@ class Car:
         user = self.data.get('user')
         try:
             if user:
-                bot_uname = str(bot_config.get('botUserName') or '').lstrip('@')
+                bot_uname = await get_bot_username(self.client)
                 text = (
-                    f"<b>🚀Telegram ВП:</b>  @{esc(bot_uname)}\n\n"
+                    f"<b>🚀 Telegram ВП:</b>  @{esc(bot_uname)}\n\n"
                     f"<b>UID {esc(user[1])}</b> Уважаемый администратор {esc(user[3])}, здравствуйте:\n\n"
                     "<b>Бот автоматического взаимопиара</b>\n\n"
-                    "👇Нажмите кнопку ниже для перехода к управлению подборками каналов\n"
+                    "👇 Нажмите кнопку ниже для перехода к управлению подборками каналов\n"
                 )
                 keyboard = [
-                    [InlineKeyboardButton(text="🏵️Подборки каналов🏵️", callback_data="a/car_channel")],
-                    [InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin")],
+                    [InlineKeyboardButton(text="🏵️ Подборки каналов 🏵️", callback_data="a/car_channel")],
+                    [InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503")],
                 ]
                 await self.sendMsg(text=text, keyboard=keyboard)
         except (TelegramAPIError, Exception) as E:
@@ -370,11 +288,15 @@ class Car:
         fleetList, count = await fleet.get_fleet(OFFSET=OFFSET, LIMIT=LIMIT)
         keyboard = []
         text = (
-            "Каналы — Зал подборок\n\n"
-            "Выберите подборку ниже, а затем выберите канал для управления или подачи заявки.\n\n"
-            "Обозначения:\n"
-            "🚒Рассылка/🕛Ожидание Название|Участники-Макс.|Мин. подписчиков\n\n"
-            "Нажмите на нужную подборку ниже"
+            "<b>🚒 Каналы — Зал подборок</b>\n\n"
+            f"<b>Всего подборок:</b> {count}\n\n"
+            "<b>Обозначения кнопок:</b>\n"
+            "<blockquote>"
+            "🚒 — рассылка запущена\n"
+            "🕛 — ожидание запуска\n"
+            "<code>Название | участники/макс. | мин. подписчиков</code>"
+            "</blockquote>\n\n"
+            "Выберите нужную подборку ниже для управления или просмотра участников."
         )
         if fleetList:
             totalPages, currentPage = math.ceil(count / LIMIT) or 1, math.ceil(OFFSET / LIMIT) + 1
@@ -393,12 +315,13 @@ class Car:
                 row = []
             keyboard.append([
                 InlineKeyboardButton(
-                    text='⬅️Назад' if upPage >= 0 else '-',
-                    callback_data=f"a/car_channel?page={upPage}" if upPage >= 0 else '-',
-                ),
+                    text='Назад',
+                    callback_data=f"a/car_channel?page={upPage}",
+                    icon_custom_emoji_id="5258084656674250503",
+                ) if upPage >= 0 else InlineKeyboardButton(text='-', callback_data='-'),
                 InlineKeyboardButton(text=f"{currentPage}/{totalPages} стр.", callback_data="-"),
                 InlineKeyboardButton(
-                    text='➡️Вперёд' if currentPage < totalPages else '-',
+                    text='➡️ Вперёд' if currentPage < totalPages else '-',
                     callback_data=f"a/car_channel?page={dowPage}" if currentPage < totalPages else '-',
                 ),
             ])
@@ -406,8 +329,8 @@ class Car:
             keyboard.append([InlineKeyboardButton(text="Пусто / подборки не найдены", callback_data="-")])
         keyboard.append([InlineKeyboardButton(text="➕ Добавить подборку", callback_data="a/car_input?k=addCar")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data="a/car"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+            InlineKeyboardButton(text="Назад", callback_data="a/car", icon_custom_emoji_id="5258084656674250503"),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
 
@@ -446,9 +369,9 @@ class Car:
             else:
                 text += "Сейчас нет участников в подборке\n"
             if fleetInfo[6] > fleetInfo[11]:
-                text += "\n✅В подборке есть свободные места"
+                text += "\n✅ В подборке есть свободные места"
             else:
-                text += "\n‼️Подборка заполнена"
+                text += "\n‼️ Подборка заполнена"
             keyboard.append([InlineKeyboardButton(text="===== Редактирование подборки =====", callback_data="-")])
             keyboard.append([
                 InlineKeyboardButton(text="Название", callback_data=f"a/car_input?k=title&id={fleetInfo[0]}"),
@@ -464,8 +387,8 @@ class Car:
                 )
             ])
             keyboard.append([
-                InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-                InlineKeyboardButton(text="↩️ Назад", callback_data="a/car_channel"),
+                InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+                InlineKeyboardButton(text="Назад", callback_data="a/car_channel", icon_custom_emoji_id="5258084656674250503"),
             ])
             await self.sendMsg(text=text, keyboard=keyboard)
         else:
@@ -524,10 +447,11 @@ class Car:
         else:
             keyboard.append([InlineKeyboardButton(text="🚫 Заблокировать", callback_data=f"a/car_ban?group={group[0]}")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
             InlineKeyboardButton(
-                text="↩️ Назад",
+                text="Назад",
                 callback_data=f"a/car_fleet?fleet={fleetInfo[0]}" if fleetInfo else "a/car_channel",
+                icon_custom_emoji_id="5258084656674250503",
             ),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
@@ -590,7 +514,7 @@ class Car:
             else esc(toUser[3])
         )
         text = (
-            "<b>📣Системное уведомление</b>📣\n"
+            "<b>📣 Системное уведомление</b> 📣\n"
             f"<b>Название подборки:</b> {esc(fleet[1] if fleet else 'Не выбрана')}\n"
             "<b>Тип подборки:</b> Канал\n"
             f"<b>Описание подборки:</b> {esc((fleet[2] or 'Не указано') if fleet else '-')}\n"
@@ -612,11 +536,12 @@ class Car:
             )
         except TelegramAPIError:
             msg = await self.retChat()
-            await msgNotify(msg=msg, text='❗Не удалось уведомить пользователя', times=5)
+            await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
+                bot_url = await get_bot_url(self.client)
                 keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName')))]
+                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
                 ])
                 await self.client.send_message(
                     chat_id=to_peer_id(bot_config["msgGroup"]),
@@ -626,7 +551,7 @@ class Car:
                 )
             except TelegramAPIError:
                 msg = await self.retChat()
-                await msgNotify(msg=msg, text='❗Не удалось уведомить группу сообщений', times=5)
+                await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
 
 
 class Review:
@@ -644,41 +569,21 @@ class Review:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"Review.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"Review.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="Review.sendMsg",
+        )
 
     async def inputBot(self, **kwargs):
         msg = await self.retChat()
         group_id = kwargs.get('id')[0] if kwargs.get('id') else None
         prompt = f"Введите свою причину отказа:{group_id}" if group_id else kwargs.get('text')[0]
-        txt = f"💭{prompt}"
+        txt = f"💭 {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def passReview(self, **kwargs):
@@ -687,7 +592,7 @@ class Review:
         car = CarData()
         group = await car.get_user_group_one(id=kwargs.get('group')[0])
         if not group:
-            return await msgNotify(msg=msg, text='❌Канал не найден', times=5)
+            return await msgNotify(msg=msg, text='❌ Канал не найден', times=5)
         if not group[11] or int(group[11]) == 0:
             return await self.pickFleet(group=[group[0]])
         fleetInfo = await car.get_fleet_one(id=group[11])
@@ -695,7 +600,7 @@ class Review:
             return await self.pickFleet(group=[group[0]])
         elif not fleetInfo[6] > fleetInfo[11]:
             await car.put_car_pass_review(group=group, state=0, label='Отклонено: подборка заполнена')
-            await msgNotify(msg=msg, text='❌Подборка заполнена, автоматический отказ', times=5)
+            await msgNotify(msg=msg, text='❌ Подборка заполнена, автоматический отказ', times=5)
             text, keyboard, user = await self.reviewNotify(group=[group[0]])
             return await self.sendReviewInfo(text=[text], keyboard=[keyboard], user_id=[user])
         try:
@@ -703,7 +608,7 @@ class Review:
             await car.put_car_pass_review(group=group, state=2, label='Одобрено', url=link.invite_link)
         except TelegramAPIError:
             await car.put_car_pass_review(group=group, state=0, label='Отклонено: нет прав на приглашение')
-            await msgNotify(msg=msg, text='❌Нет прав на создание ссылки, заявка отклонена', times=5)
+            await msgNotify(msg=msg, text='❌ Нет прав на создание ссылки, заявка отклонена', times=5)
         text, keyboard, user = await self.reviewNotify(group=[group[0]])
         await self.sendReviewInfo(text=[text], keyboard=[keyboard], user_id=[user])
 
@@ -737,7 +642,7 @@ class Review:
                 "⚠️ Подборки ещё не созданы. Сначала создайте подборку каналов."
             )
             keyboard.append([InlineKeyboardButton(text="➕ Создать подборку", callback_data="a/car_input?k=addCar")])
-        keyboard.append([InlineKeyboardButton(text="↩️ Назад", callback_data=f"a/review_back?group={group[0]}")])
+        keyboard.append([InlineKeyboardButton(text="Назад", callback_data=f"a/review_back?group={group[0]}", icon_custom_emoji_id="5258084656674250503")])
         await self.sendMsg(text=text, keyboard=keyboard)
 
     async def assignFleet(self, **kwargs):
@@ -747,14 +652,14 @@ class Review:
         car = CarData()
         group = await car.get_user_group_one(id=group_id)
         if not group:
-            return await msgNotify(msg=msg, text='❌Канал не найден', times=5)
+            return await msgNotify(msg=msg, text='❌ Канал не найден', times=5)
         fleetInfo = await car.get_fleet_one(id=fleet_id)
         if not fleetInfo:
-            return await msgNotify(msg=msg, text='❌Подборка не найдена', times=5)
+            return await msgNotify(msg=msg, text='❌ Подборка не найдена', times=5)
         if not fleetInfo[6] > fleetInfo[11]:
             if self.query:
                 return await self.query.answer('❌ В этой подборке нет свободных мест', show_alert=True)
-            return await msgNotify(msg=msg, text='❌В этой подборке нет свободных мест', times=5)
+            return await msgNotify(msg=msg, text='❌ В этой подборке нет свободных мест', times=5)
         try:
             link = await self.client.create_chat_invite_link(to_peer_id(group[1]))
             await car.put_car_pass_review(
@@ -771,7 +676,7 @@ class Review:
                 label='Отклонено: нет прав на приглашение',
                 fleet_id=int(fleet_id),
             )
-            await msgNotify(msg=msg, text='❌Нет прав на создание ссылки, заявка отклонена', times=5)
+            await msgNotify(msg=msg, text='❌ Нет прав на создание ссылки, заявка отклонена', times=5)
         text, keyboard, user = await self.reviewNotify(group=[group[0]])
         await self.sendReviewInfo(text=[text], keyboard=[keyboard], user_id=[user])
 
@@ -789,7 +694,7 @@ class Review:
                 ])
         content.append([
             InlineKeyboardButton(text="🔡 Своя причина отказа", callback_data=f"a/custom_reason?id={group_id}"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data=f"a/review_back?group={group_id}"),
+            InlineKeyboardButton(text="Назад", callback_data=f"a/review_back?group={group_id}", icon_custom_emoji_id="5258084656674250503"),
         ])
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n\n"
@@ -804,7 +709,7 @@ class Review:
         car = CarData()
         group = await car.get_user_group_one(id=kwargs.get('group')[0])
         if not group:
-            return await msgNotify(msg=msg, text='❌Канал не найден')
+            return await msgNotify(msg=msg, text='❌ Канал не найден')
         reply = {}
         if self.query:
             Text = await car.get_rejectText(id=kwargs.get('reason')[0])
@@ -839,7 +744,7 @@ class Review:
             else esc(toUser[3] if toUser else 'Неизвестно')
         )
         text = (
-            "<b>📣Системное уведомление</b>📣\n"
+            "<b>📣 Системное уведомление</b> 📣\n"
             f"<b>Название подборки:</b> {esc(fleet[1] if fleet else 'Не выбрана')}\n"
             "<b>Тип подборки:</b> Канал\n"
             f"<b>Описание подборки:</b> {esc((fleet[2] or 'Не указано') if fleet else '-')}\n"
@@ -912,11 +817,12 @@ class Review:
                     link_preview_options=LinkPreviewOptions(is_disabled=True),
                 )
             except TelegramAPIError:
-                await msgNotify(msg=msg, text='❗Не удалось уведомить пользователя', times=5)
+                await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
+                bot_url = await get_bot_url(self.client)
                 keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName')))]
+                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
                 ])
                 await self.client.send_message(
                     chat_id=to_peer_id(bot_config["msgGroup"]),
@@ -925,7 +831,7 @@ class Review:
                     link_preview_options=LinkPreviewOptions(is_disabled=True),
                 )
             except TelegramAPIError:
-                await msgNotify(msg=msg, text='❗Не удалось уведомить группу сообщений', times=5)
+                await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
 
     async def banGroup(self, **kwargs):
         car = CarData()
@@ -969,41 +875,21 @@ class Group:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"Group.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"Group.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="Group.sendMsg",
+        )
 
     async def inputBot(self, **kwargs):
         msg = await self.retChat()
         k = kwargs.get('k')[0] if kwargs.get('k') else None
         prompt = "Введите название канала:" if k == "search" else kwargs.get('text')[0]
-        txt = f"🏵️‍{prompt}"
+        txt = f"🏵️ {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def index(self, **kwargs):
@@ -1017,22 +903,23 @@ class Group:
             "Каналы — Управление\n\n"
             f"Всего каналов: {group_count[1]} | В подборке {group_count[2]} | Снято {group_count[1] - group_count[2]}\n"
             "Обозначения:\n"
-            "🏵️‍Канал — Название\n\n"
+            "🏵️ Канал — Название\n\n"
             "Нажмите на кнопку ниже для подробностей"
         )
         if group and group_count:
             totalPages, currentPage = math.ceil(group_count[1] / LIMIT) or 1, math.ceil(OFFSET / LIMIT) + 1
             upPage, dowPage = OFFSET - LIMIT, OFFSET + LIMIT
             for key in group:
-                keyboard.append([InlineKeyboardButton(text=f"🏵️‍-{key[3]} ", callback_data=f"a/group_info?group={key[0]}")])
+                keyboard.append([InlineKeyboardButton(text=f"🏵️ -{key[3]} ", callback_data=f"a/group_info?group={key[0]}")])
             keyboard.append([
                 InlineKeyboardButton(
-                    text='⬅️Назад' if upPage >= 0 else '-',
-                    callback_data=f"a/group?page={upPage}" if upPage >= 0 else '-',
-                ),
+                    text='Назад',
+                    callback_data=f"a/group?page={upPage}",
+                    icon_custom_emoji_id="5258084656674250503",
+                ) if upPage >= 0 else InlineKeyboardButton(text='-', callback_data='-'),
                 InlineKeyboardButton(text=f"{currentPage}/{totalPages} стр.", callback_data="-"),
                 InlineKeyboardButton(
-                    text='➡️Вперёд' if currentPage < totalPages else '-',
+                    text='➡️ Вперёд' if currentPage < totalPages else '-',
                     callback_data=f"a/group?page={dowPage}" if currentPage < totalPages else '-',
                 ),
             ])
@@ -1040,8 +927,8 @@ class Group:
             keyboard.append([InlineKeyboardButton(text="Пусто / не найдено", callback_data="-")])
         keyboard.append([InlineKeyboardButton(text="🔎 Поиск", callback_data="a/group_input?k=search")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+            InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503"),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
 
@@ -1062,7 +949,7 @@ class Group:
             )
             text = (
                 "✨✨✨✨✨✨✨✨✨✨✨✨\n"
-                f"💡<b>Данные: {group_type}</b>💡\n\n"
+                f"💡 <b>Данные: {group_type}</b> 💡\n\n"
                 f"〖ID ({group_type})〗{esc(group_info[1])}\n"
                 f"〖Юзернейм〗{esc('@' + group_info[2] if group_info[2] else 'Не указан')}\n"
                 f"〖Название〗{esc(group_info[3])}\n"
@@ -1080,8 +967,8 @@ class Group:
             else:
                 keyboard.append([InlineKeyboardButton(text="🚫 Заблокировать", callback_data=f"a/group_ban?group={group_info[0]}")])
             keyboard.append([
-                InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-                InlineKeyboardButton(text="↩️ Назад", callback_data="a/group"),
+                InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+                InlineKeyboardButton(text="Назад", callback_data="a/group", icon_custom_emoji_id="5258084656674250503"),
             ])
             await self.sendMsg(text=text, keyboard=keyboard)
         else:
@@ -1118,7 +1005,7 @@ class Group:
             else esc(toUser[3])
         )
         text = (
-            "<b>📣Системное уведомление</b>📣\n"
+            "<b>📣 Системное уведомление</b> 📣\n"
             f"<b>ID канала:</b> {esc(group[1])}\n"
             f"<b>Канал:</b> {html_link(group[3], group[6])}\n"
             f"<b>Подписчиков:</b> {group[5]}\n"
@@ -1134,11 +1021,12 @@ class Group:
             )
         except TelegramAPIError:
             msg = await self.retChat()
-            await msgNotify(msg=msg, text='❗Не удалось уведомить пользователя', times=5)
+            await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
+                bot_url = await get_bot_url(self.client)
                 keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName')))]
+                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
                 ])
                 await self.client.send_message(
                     chat_id=to_peer_id(bot_config["msgGroup"]),
@@ -1148,7 +1036,7 @@ class Group:
                 )
             except TelegramAPIError:
                 msg = await self.retChat()
-                await msgNotify(msg=msg, text='❗Не удалось уведомить группу сообщений', times=5)
+                await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
 
 
 class User:
@@ -1165,41 +1053,21 @@ class User:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"User.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"User.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="User.sendMsg",
+        )
 
     async def inputBot(self, **kwargs):
         msg = await self.retChat()
         k = kwargs.get('k')[0] if kwargs.get('k') else None
         prompt = "Введите юзернейм или имя:" if k == "search" else kwargs.get('text')[0]
-        txt = f"👨‍💻{prompt}"
+        txt = f"👨‍💻 {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def getUser(self, **kwargs):
@@ -1243,7 +1111,7 @@ class User:
             for user in userList:
                 content.append([
                     InlineKeyboardButton(
-                        text=f"{'👮‍' if user[5] == 1 else '👑' if user[5] == 2 else '👳‍'}{user[3]}",
+                        text=f"{'👮' if user[5] == 1 else '👑' if user[5] == 2 else '👳'} {user[3]}",
                         callback_data=f"a/user_info?user={user[0]}",
                     )
                 ])
@@ -1251,9 +1119,10 @@ class User:
             type_q = f"&type={userType}" if (kwargs.get('type') or not search_val) else ""
             content.append([
                 InlineKeyboardButton(
-                    text='Назад' if upPage >= 0 else '-',
-                    callback_data=f"a/user?page={upPage}{type_q}{search_q}" if upPage >= 0 else '-',
-                ),
+                    text='Назад',
+                    callback_data=f"a/user?page={upPage}{type_q}{search_q}",
+                    icon_custom_emoji_id="5258084656674250503",
+                ) if upPage >= 0 else InlineKeyboardButton(text='-', callback_data='-'),
                 InlineKeyboardButton(text=f"{currentPage}/{totalPages}", callback_data="-"),
                 InlineKeyboardButton(
                     text='Вперёд' if currentPage < totalPages else '-',
@@ -1265,23 +1134,23 @@ class User:
         keyboard = [
             [
                 InlineKeyboardButton(
-                    text=f"{'🟢' if userType == 0 and not search_val else ''}Обычные",
+                    text=f"{'🟢 ' if userType == 0 and not search_val else ''}Обычные",
                     callback_data="a/user?type=0",
                 ),
                 InlineKeyboardButton(
-                    text=f"{'🟢' if userType == 1 else ''}Администраторы",
+                    text=f"{'🟢 ' if userType == 1 else ''}Администраторы",
                     callback_data="a/user?type=1",
                 ),
             ],
             [InlineKeyboardButton(text="Поиск пользователя", callback_data="a/user_input?k=search")],
-            [InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin")],
+            [InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503")],
         ]
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n\n"
             "======<b>🏆 Поиск пользователей 🏆</b>======\n"
             f"〖Количество〗{total_count} чел.\n"
-            f"👮‍Администраторы: {admin_count}\n"
-            f"👳Пользователи: {state_count}\n"
+            f"👮 Администраторы: {admin_count}\n"
+            f"👳 Пользователи: {state_count}\n"
         )
         await self.sendMsg(text=text, keyboard=content + keyboard)
 
@@ -1294,23 +1163,23 @@ class User:
             return
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n"
-            "💡<b>Профиль пользователя</b>💡\n\n"
+            "💡 <b>Профиль пользователя</b> 💡\n\n"
             f"〖ID пользователя〗<code>{esc(user[0][1] or 'Нет')}</code> (нажмите для копирования)\n"
             f"〖Юзернейм〗<code>{esc(user[0][2] or 'Нет')}</code> (нажмите для копирования)\n"
             f"〖Имя〗<code>{esc(user[0][3] or 'Нет')}</code> (нажмите для копирования)\n"
-            f"〖Статус〗{'🟢Активен' if user[0][4] == 0 else '🔴Заблокирован'}\n"
-            f"〖Права〗{'👮‍Администратор' if user[0][5] == 1 else '👑Супер-админ' if user[0][5] == 2 else '👳‍Пользователь'}\n"
+            f"〖Статус〗{'🟢 Активен' if user[0][4] == 0 else '🔴 Заблокирован'}\n"
+            f"〖Права〗{'👮 Администратор' if user[0][5] == 1 else '👑 Супер-админ' if user[0][5] == 2 else '👳 Пользователь'}\n"
         )
         keyboard = []
         if user[0][5] == 0:
-            keyboard.append([InlineKeyboardButton(text="🔐Назначить админом", callback_data=f"a/set_admin?user={user[0][0]}&p=0")])
+            keyboard.append([InlineKeyboardButton(text="🔐 Назначить админом", callback_data=f"a/set_admin?user={user[0][0]}&p=0")])
         elif user[0][5] == 1:
-            keyboard.append([InlineKeyboardButton(text="🔓Снять админа", callback_data=f"a/set_admin?user={user[0][0]}&p=1")])
+            keyboard.append([InlineKeyboardButton(text="🔓 Снять админа", callback_data=f"a/set_admin?user={user[0][0]}&p=1")])
         if user[0][4] == 0:
             keyboard.append([InlineKeyboardButton(text="🚷 Заблокировать", callback_data=f"a/ban_user?user={user[0][0]}")])
         else:
             keyboard.append([InlineKeyboardButton(text="✅ Разблокировать", callback_data=f"a/ban_user?user={user[0][0]}")])
-        keyboard.append([InlineKeyboardButton(text="↩️ Назад", callback_data="a/user")])
+        keyboard.append([InlineKeyboardButton(text="Назад", callback_data="a/user", icon_custom_emoji_id="5258084656674250503")])
         await self.sendMsg(text=text, keyboard=keyboard)
 
     async def setAdmin(self, **kwargs):
@@ -1321,6 +1190,9 @@ class User:
             if user and user[0][5] == 2:
                 pa = 1 if kwargs.get('p')[0] == '0' else 0
                 if await db.update("UPDATE chat_user SET admin=? WHERE id=?", (pa, kwargs.get('user')[0])):
+                    target = await db.select("SELECT chat_id FROM chat_user WHERE id = ?", (kwargs.get('user')[0],))
+                    if target:
+                        await sync_user_commands(self.client, target[0][0], is_admin=(pa in [1, 2]))
                     await self.query.answer(text='Права администратора обновлены', show_alert=True)
                     await self.userInfo(user=kwargs.get('user'))
                 else:
@@ -1360,11 +1232,11 @@ class User:
             return
         text = (
             "✨✨✨✨✨✨✨✨✨✨✨✨\n"
-            "💡<b>Профиль пользователя</b>💡\n\n"
+            "💡 <b>Профиль пользователя</b> 💡\n\n"
             f"〖ID пользователя〗<code>{esc(toUser[1] or 'Нет')}</code> (нажмите для копирования)\n"
             f"〖Юзернейм〗<code>{esc(toUser[2] or 'Нет')}</code> (нажмите для копирования)\n"
             f"〖Имя〗<code>{esc(toUser[3] or 'Нет')}</code> (нажмите для копирования)\n"
-            f"〖Статус〗{'🟢Активен' if toUser[4] == 0 else '🔴Заблокирован'}\n"
+            f"〖Статус〗{'🟢 Активен' if toUser[4] == 0 else '🔴 Заблокирован'}\n"
             f"〖Уведомление〗<b> {'🟢 Ваш аккаунт разблокирован администратором' if toUser[4] == 0 else '🔴 Ваш аккаунт заблокирован администратором'}</b>"
         )
         try:
@@ -1375,11 +1247,12 @@ class User:
             )
         except TelegramAPIError:
             msg = await self.retChat()
-            await msgNotify(msg=msg, text='❗Не удалось уведомить пользователя', times=5)
+            await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
+                bot_url = await get_bot_url(self.client)
                 keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=format_tg_url(bot_config.get('botUserName')))]
+                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
                 ])
                 await self.client.send_message(
                     chat_id=to_peer_id(bot_config["msgGroup"]),
@@ -1389,7 +1262,7 @@ class User:
                 )
             except TelegramAPIError:
                 msg = await self.retChat()
-                await msgNotify(msg=msg, text='❗Не удалось уведомить группу сообщений', times=5)
+                await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
 
 
 class BotBlacklist:
@@ -1406,35 +1279,15 @@ class BotBlacklist:
 
     async def sendMsg(self, **kwargs):
         msg = await self.retChat()
-        markup = InlineKeyboardMarkup(inline_keyboard=kwargs['keyboard'])
-        try:
-            if self.query:
-                await self.client.edit_message_text(
-                    chat_id=msg.chat.id,
-                    message_id=msg.message_id,
-                    text=kwargs['text'],
-                    reply_markup=markup,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
-            else:
-                if len(bot_config.get('video') or '') > 24:
-                    await self.client.send_video(
-                        chat_id=msg.chat.id,
-                        video=bot_config.get('video'),
-                        caption=kwargs['text'],
-                        reply_markup=markup,
-                    )
-                else:
-                    await msg.answer(
-                        text=kwargs['text'],
-                        reply_markup=markup,
-                        link_preview_options=LinkPreviewOptions(is_disabled=True),
-                    )
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logging.warning(f"BotBlacklist.sendMsg TelegramBadRequest: {e}")
-        except TelegramAPIError as e:
-            logging.warning(f"BotBlacklist.sendMsg TelegramAPIError: {e}")
+        await send_inline_message(
+            client=self.client,
+            msg=msg,
+            is_query=bool(self.query),
+            text=kwargs['text'],
+            keyboard=kwargs['keyboard'],
+            parse_mode=kwargs.get('parse_mode', ParseMode.HTML),
+            tag="BotBlacklist.sendMsg",
+        )
 
     async def botInput(self, **kwargs):
         msg = await self.retChat()
@@ -1446,7 +1299,7 @@ class BotBlacklist:
             prompt = f"Введите новый юзернейм бота:{item_id}"
         else:
             prompt = kwargs.get('text')[0]
-        txt = f"🤖{prompt}"
+        txt = f"🤖 {prompt}"
         await msg.reply(text=esc(txt), reply_markup=ForceReply(selective=True))
 
     async def index(self, **kwargs):
@@ -1456,8 +1309,8 @@ class BotBlacklist:
             "======<b>🏆 Чёрный список ботов 🏆</b>======\n"
             "При подаче заявки и при рассылке проверяется наличие ботов из ЧС; при обнаружении канал снимается с подборки\n"
             "Инструкция: введите юзернейм бота с @, например @xxxbot\n"
-            "Обозначения: ➕Добавить ❌Удалить 🖍Изменить\n\n"
-            "🚫<b>Список заблокированных ботов:</b>\n"
+            "Обозначения: ➕ Добавить ❌ Удалить 🖍 Изменить\n\n"
+            "🚫 <b>Список заблокированных ботов:</b>\n"
         )
         keyboard = []
         if bl_list:
@@ -1471,10 +1324,10 @@ class BotBlacklist:
         else:
             text += "Пусто, не настроено"
             keyboard.append([InlineKeyboardButton(text="Список пуст", callback_data="-")])
-        keyboard.append([InlineKeyboardButton(text="➕Добавить", callback_data="a/bot_bl_input?k=addBot")])
+        keyboard.append([InlineKeyboardButton(text="➕ Добавить", callback_data="a/bot_bl_input?k=addBot")])
         keyboard.append([
-            InlineKeyboardButton(text="🏠 Админ-панель", callback_data="a/admin"),
-            InlineKeyboardButton(text="↩️ Назад", callback_data="a/admin"),
+            InlineKeyboardButton(text="Админ-панель", callback_data="a/admin", icon_custom_emoji_id="5257963315258204021"),
+            InlineKeyboardButton(text="Назад", callback_data="a/admin", icon_custom_emoji_id="5258084656674250503"),
         ])
         await self.sendMsg(text=text, keyboard=keyboard)
 
@@ -1485,7 +1338,7 @@ class BotBlacklist:
         delData = await BotBlacklistDate().del_bot_blacklist(id=item_id)
         if delData:
             if self.query:
-                await self.query.answer(text="✅Успешно удалено", cache_time=5)
+                await self.query.answer(text="✅ Успешно удалено", cache_time=5)
             await self.index()
         else:
-            await msgNotify(msg=msg, text="❕Ошибка удаления")
+            await msgNotify(msg=msg, text="❕ Ошибка удаления")
