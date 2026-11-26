@@ -337,7 +337,7 @@ async def msgNotify(msg: Message, text='Нет', times=2):
     scheduler.add_job(
         timeJob,
         trigger='date',
-        run_date=datetime.datetime.now() + datetime.timedelta(seconds=times),
+        run_date=datetime.datetime.now(scheduler.timezone) + datetime.timedelta(seconds=times),
         args=({'id': msgId.chat.id, 'message_ids': [msgId.message_id]},),
     )
 

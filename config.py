@@ -3,7 +3,8 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-dotenv_path = join(dirname(__file__), ".env")
+BASE_DIR = dirname(os.path.abspath(__file__))
+dotenv_path = join(BASE_DIR, ".env")
 load_dotenv(dotenv_path)
 
 BOT_TOKEN = str(os.getenv("BOT_TOKEN") or "").strip()
@@ -13,6 +14,10 @@ DATABASE_URL = str(os.getenv("DATABASE_URL") or "").strip()
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN не найден в .env")
+
+import pydantic
+if hasattr(pydantic, "FailFast") and getattr(pydantic.FailFast, "__hash__", None) is None:
+    pydantic.FailFast.__hash__ = lambda self: hash((type(self), getattr(self, "fail_fast", True)))
 
 from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
@@ -48,20 +53,28 @@ import re
 import json
 import time
 import threading
-import uvloop
-import redis
+try:
+    import uvloop
+    uvloop.install()
+except Exception:
+    pass
+
+try:
+    import redis
+except ImportError:
+    redis = None
+
 import socket
 import math
 import datetime
 import logging
 
-uvloop.install()
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     filemode='a',
-    filename='run.log',
+    filename=join(BASE_DIR, 'run.log'),
+    encoding='utf-8',
 )
 
 
@@ -121,14 +134,16 @@ class _MemoryRedisFallback:
 
 class _SafeRedisClient:
     def __init__(self, host='127.0.0.1', port=6379, db=2):
-        self._client = redis.Redis(host=host, port=port, db=db, socket_connect_timeout=1)
         self._fallback = _MemoryRedisFallback()
-        self._use_fallback = False
-        try:
-            self._client.ping()
-        except Exception:
-            self._use_fallback = True
-            logging.warning("Redis недоступен, используется встроенный in-memory кеш")
+        self._client = None
+        self._use_fallback = redis is None
+        if not self._use_fallback:
+            self._client = redis.Redis(host=host, port=port, db=db, socket_connect_timeout=1)
+            try:
+                self._client.ping()
+            except Exception:
+                self._use_fallback = True
+                logging.warning("Redis недоступен, используется встроенный in-memory кеш")
 
     def _call(self, method, *args, **kwargs):
         if not self._use_fallback:
@@ -165,10 +180,16 @@ bot_config = {
     "restrict_limit": 60
 }
 
-scheduler = AsyncIOScheduler(
-    timezone='Asia/Shanghai',
-    job_defaults={'max_instances': 1, 'coalesce': False}
-)
+try:
+    scheduler = AsyncIOScheduler(
+        timezone='Asia/Shanghai',
+        job_defaults={'max_instances': 1, 'coalesce': False}
+    )
+except Exception:
+    scheduler = AsyncIOScheduler(
+        timezone=datetime.timezone.utc,
+        job_defaults={'max_instances': 1, 'coalesce': False}
+    )
 
 cli_obj = {
     "name": "HuTuiBot",

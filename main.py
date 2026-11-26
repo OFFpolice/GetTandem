@@ -1,31 +1,11 @@
-import importlib.util
 import logging
-import subprocess
+import os
 import sys
 
-
-def _ensure_dependencies():
-    required = ("aiogram", "dotenv", "aiosqlite", "apscheduler", "emoji", "redis", "uvloop", "asyncpg")
-    if all(importlib.util.find_spec(pkg) is not None for pkg in required):
-        return
-    if importlib.util.find_spec("pip") is None:
-        import os
-        import urllib.request
-
-        tmp_pip = "/tmp/get-pip.py"
-        urllib.request.urlretrieve("https://bootstrap.pypa.io/get-pip.py", tmp_pip)
-        try:
-            subprocess.run([sys.executable, tmp_pip, "--break-system-packages"], check=True)
-        finally:
-            if os.path.exists(tmp_pip):
-                os.remove(tmp_pip)
-    subprocess.run(
-        [sys.executable, "-m", "pip", "install", "--break-system-packages", "-q", "-r", "requirements.txt"],
-        check=True,
-    )
-
-
-_ensure_dependencies()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+os.chdir(BASE_DIR)
 
 from config import *
 from monitor.command import *
@@ -126,15 +106,19 @@ async def main():
         if scheduler.running:
             scheduler.shutdown(wait=False)
         await db.close()
-        await bot.session.close()
+        try:
+            await bot.session.close()
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind(("127.0.0.1", 47209))
     except socket.error:
+        sock.close()
         print('Бот уже запущен')
     else:
         try:
@@ -143,3 +127,8 @@ if __name__ == '__main__':
             logging.info("Бот остановлен")
         except Exception as e:
             logging.error(f"Критическая ошибка запуска: {e}")
+        finally:
+            try:
+                sock.close()
+            except Exception:
+                pass
