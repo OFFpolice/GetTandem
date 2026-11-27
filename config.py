@@ -192,7 +192,7 @@ except Exception:
     )
 
 cli_obj = {
-    "name": "HuTuiBot",
+    "name": "GetTandemBot",
     "bot_token": BOT_TOKEN,
 }
 

@@ -49,9 +49,9 @@ router.add_route('a/group_input', Group, 'inputBot')
 router.add_route('a/group_info', Group, 'groupInfo')
 router.add_route('a/group_ban', Group, 'banGroup')
 
-router.add_route('a/user', User, 'getUser')  # Выборка пользователей
+router.add_route('a/user', User, 'getUser')
 router.add_route('a/user_input', User, 'inputBot')
-router.add_route('a/user_info', User, 'userInfo')  # Профиль пользователя
+router.add_route('a/user_info', User, 'userInfo')
 router.add_route('a/set_admin', User, 'setAdmin')
 router.add_route('a/ban_user', User, 'banUser')
 router.add_route('a/back', User, 'backReview')

@@ -412,11 +412,13 @@ async def convoyDriving():
     fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1")
     logging.info('Запуск рассылки')
     if fleet_list:
-        bot_url = await get_bot_url(bot)
         vp_keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [
-                InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url),
-                InlineKeyboardButton(text="📣 Доска объявлений", url="https://t.me/jindun"),
+                InlineKeyboardButton(
+                    text="JISOU",
+                    url="https://t.me/jisou?start=a_1741564693",
+                    icon_custom_emoji_id="5429571366384842791",
+                ),
             ]
         ])
         for fleet in fleet_list:
@@ -535,11 +537,15 @@ async def marshalling(group_chat=None, fleet=None):
         self_url = str(group_chat[6] or '').strip()
         if "/+" in self_url or "joinchat/" in self_url:
             link_group = await bot.edit_chat_invite_link(to_peer_id(group_chat[1]), self_url)
-            if link_group and not link_group.is_revoked and link_group.member_count is not None:
-                await db.update(
-                    "UPDATE group_list SET input_fan=? WHERE id=?",
-                    (link_group.member_count or 0, group_chat[0]),
-                )
+            if link_group and not link_group.is_revoked:
+                try:
+                    member_count = await bot.get_chat_member_count(to_peer_id(group_chat[1]))
+                    await db.update(
+                        "UPDATE group_list SET input_fan=? WHERE id=?",
+                        (member_count, group_chat[0]),
+                    )
+                except TelegramAPIError as e:
+                    logging.debug(f"Ошибка обновления числа участников канала: {e}")
     except TelegramAPIError as e:
         logging.debug(f"Ошибка обновления числа вступивших по ссылке: {e}")
     if index <= 1:
