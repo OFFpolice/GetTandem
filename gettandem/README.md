@@ -1,2 +1,0 @@
-# GetTandem
-GetTandem
