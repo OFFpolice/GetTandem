@@ -539,16 +539,7 @@ class Car:
             await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
-                bot_url = await get_bot_url(self.client)
-                keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
-                ])
-                await self.client.send_message(
-                    chat_id=to_peer_id(bot_config["msgGroup"]),
-                    text=text,
-                    reply_markup=keyboards,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
+                await send_jisou_msg(self.client, bot_config["msgGroup"], text)
             except TelegramAPIError:
                 msg = await self.retChat()
                 await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
@@ -820,16 +811,7 @@ class Review:
                 await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
-                bot_url = await get_bot_url(self.client)
-                keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
-                ])
-                await self.client.send_message(
-                    chat_id=to_peer_id(bot_config["msgGroup"]),
-                    text=text,
-                    reply_markup=keyboards,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
+                await send_jisou_msg(self.client, bot_config["msgGroup"], text)
             except TelegramAPIError:
                 await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
 
@@ -1024,16 +1006,7 @@ class Group:
             await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
-                bot_url = await get_bot_url(self.client)
-                keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
-                ])
-                await self.client.send_message(
-                    chat_id=to_peer_id(bot_config["msgGroup"]),
-                    text=text,
-                    reply_markup=keyboards,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
+                await send_jisou_msg(self.client, bot_config["msgGroup"], text)
             except TelegramAPIError:
                 msg = await self.retChat()
                 await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)
@@ -1250,16 +1223,7 @@ class User:
             await msgNotify(msg=msg, text='❗ Не удалось уведомить пользователя', times=5)
         if len(str(bot_config.get("msgGroup") or "")) > 5:
             try:
-                bot_url = await get_bot_url(self.client)
-                keyboards = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="➕ Участвовать в ВП", url=bot_url)]
-                ])
-                await self.client.send_message(
-                    chat_id=to_peer_id(bot_config["msgGroup"]),
-                    text=text,
-                    reply_markup=keyboards,
-                    link_preview_options=LinkPreviewOptions(is_disabled=True),
-                )
+                await send_jisou_msg(self.client, bot_config["msgGroup"], text)
             except TelegramAPIError:
                 msg = await self.retChat()
                 await msgNotify(msg=msg, text='❗ Не удалось уведомить группу сообщений', times=5)

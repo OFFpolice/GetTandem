@@ -246,25 +246,85 @@ async def isPrivileges(chatId, typeG):
 
 
 _bot_username_cache = ""
+_bot_name_cache = ""
 
 
 async def get_bot_username(client: Bot = None):
-    global _bot_username_cache
+    global _bot_username_cache, _bot_name_cache
     if _bot_username_cache:
         return _bot_username_cache
     c = client or bot
     try:
         me = await c.get_me()
-        if me and me.username:
-            _bot_username_cache = me.username.lstrip('@')
+        if me:
+            if me.username:
+                _bot_username_cache = me.username.lstrip('@')
+            if not _bot_name_cache:
+                _bot_name_cache = (me.full_name or me.first_name or me.username or "").strip()
     except TelegramAPIError as e:
         logging.warning(f"Не удалось получить username бота: {e}")
     return _bot_username_cache
 
 
+async def get_bot_name(client: Bot = None):
+    global _bot_username_cache, _bot_name_cache
+    if _bot_name_cache:
+        return _bot_name_cache
+    c = client or bot
+    try:
+        me = await c.get_me()
+        if me:
+            if me.username and not _bot_username_cache:
+                _bot_username_cache = me.username.lstrip('@')
+            _bot_name_cache = (me.full_name or me.first_name or me.username or "").strip()
+    except TelegramAPIError as e:
+        logging.warning(f"Не удалось получить имя бота: {e}")
+    return _bot_name_cache or str(cli_obj.get("name") or "Bot")
+
+
 async def get_bot_url(client: Bot = None):
     uname = await get_bot_username(client)
     return f"https://t.me/{uname}" if uname else "https://t.me"
+
+
+JISOU_BUTTON_TEXT = "JISOU"
+JISOU_BUTTON_URL = "https://t.me/jisou?start=a_1741564693"
+JISOU_BUTTON_EMOJI_ID = "5429571366384842791"
+
+
+def get_jisou_keyboard(with_icon: bool = True) -> InlineKeyboardMarkup:
+    btn_kwargs = {
+        "text": JISOU_BUTTON_TEXT,
+        "url": JISOU_BUTTON_URL,
+    }
+    if with_icon:
+        btn_kwargs["icon_custom_emoji_id"] = JISOU_BUTTON_EMOJI_ID
+    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(**btn_kwargs)]])
+
+
+def _strip_tg_emoji_tags(text: str) -> str:
+    return re.sub(r"<tg-emoji\b[^>]*>(.*?)</tg-emoji>", r"\1", text)
+
+
+async def send_jisou_msg(client: Bot, chat_id, text: str):
+    peer = to_peer_id(chat_id)
+    try:
+        return await client.send_message(
+            chat_id=peer,
+            text=text,
+            reply_markup=get_jisou_keyboard(with_icon=True),
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
+        )
+    except TelegramBadRequest as e:
+        err_text = str(e).lower()
+        if "emoji" in err_text or "icon" in err_text or "custom_emoji" in err_text:
+            return await client.send_message(
+                chat_id=peer,
+                text=_strip_tg_emoji_tags(text),
+                reply_markup=get_jisou_keyboard(with_icon=False),
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
+            )
+        raise
 
 
 USER_COMMANDS = [
@@ -412,15 +472,8 @@ async def convoyDriving():
     fleet_list = await db.select("SELECT * FROM fleet_list WHERE state = 1")
     logging.info('Запуск рассылки')
     if fleet_list:
-        vp_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="JISOU",
-                    url="https://t.me/jisou?start=a_1741564693",
-                    icon_custom_emoji_id="5429571366384842791",
-                ),
-            ]
-        ])
+        vp_keyboard = get_jisou_keyboard(with_icon=True)
+        vp_keyboard_plain = get_jisou_keyboard(with_icon=False)
         for fleet in fleet_list:
             group_list = await db.select(
                 "SELECT * FROM group_list WHERE fleet_list=? AND type='CHANNEL' AND state=2",
@@ -463,6 +516,19 @@ async def convoyDriving():
                                 msg_exists = True
                             elif "not found" in err_text or "message_id_invalid" in err_text:
                                 msg_exists = False
+                            elif "emoji" in err_text or "icon" in err_text or "custom_emoji" in err_text:
+                                try:
+                                    await bot.edit_message_reply_markup(
+                                        chat_id=peer_id,
+                                        message_id=int(group[7]),
+                                        reply_markup=vp_keyboard_plain,
+                                    )
+                                except TelegramBadRequest as retry_err:
+                                    retry_text = str(retry_err).lower()
+                                    if "not found" in retry_text or "message_id_invalid" in retry_text:
+                                        msg_exists = False
+                                except TelegramAPIError:
+                                    msg_exists = True
                         except TelegramAPIError:
                             msg_exists = True
                         if not msg_exists:
@@ -475,14 +541,33 @@ async def convoyDriving():
                             continue
                     text_list = await marshalling(group_chat=group, fleet=fleet)
                     if len(text_list) > 2:
+                        post_text = ''.join(text_list)
+                        msg = None
                         try:
                             msg = await bot.send_message(
                                 chat_id=peer_id,
-                                text=''.join(text_list),
+                                text=post_text,
                                 reply_markup=vp_keyboard,
                                 link_preview_options=LinkPreviewOptions(is_disabled=True),
                                 disable_notification=True,
                             )
+                        except TelegramBadRequest as e:
+                            err_text = str(e).lower()
+                            if "emoji" in err_text or "icon" in err_text or "custom_emoji" in err_text:
+                                try:
+                                    msg = await bot.send_message(
+                                        chat_id=peer_id,
+                                        text=_strip_tg_emoji_tags(post_text),
+                                        reply_markup=vp_keyboard_plain,
+                                        link_preview_options=LinkPreviewOptions(is_disabled=True),
+                                        disable_notification=True,
+                                    )
+                                except TelegramAPIError as retry_err:
+                                    logging.error(f"Ошибка отправки подборки в канал {group[1]}: {retry_err}")
+                                    continue
+                            else:
+                                logging.error(f"Ошибка отправки подборки в канал {group[1]}: {e}")
+                                continue
                         except TelegramAPIError as e:
                             logging.error(f"Ошибка отправки подборки в канал {group[1]}: {e}")
                             continue
@@ -501,11 +586,15 @@ async def convoyDriving():
 async def marshalling(group_chat=None, fleet=None):
     new_car_list, index = [], 1
     bot_url = await get_bot_url(bot)
-    header_link = html_link(fleet[1], bot_url)
-    new_car_list.append(f"<b>⛩️ {header_link} ⛩️</b>\n")
+    bot_name = await get_bot_name(bot)
+    header_link = html_link(f"{fleet[1]} | {bot_name}", bot_url)
+    star_emoji = '<tg-emoji emoji-id="5258185631355378853">⭐️</tg-emoji>'
+    new_car_list.append(f"{star_emoji} <b>{header_link}</b> {star_emoji}\n")
     advertising_list = await AdvertisingData().get_advertising_list()
     if len(advertising_list) >= 1:
         new_car_list.append(f"<b>AD:{html_link(advertising_list[0][1], advertising_list[0][2])}</b>\n\n")
+    else:
+        new_car_list.append("\n")
     group_list = await db.select(
         "SELECT * FROM group_list WHERE fleet_list=? AND type='CHANNEL' AND state=2",
         (fleet[0],),
